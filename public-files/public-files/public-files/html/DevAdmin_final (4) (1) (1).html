@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DevAdmin · Console de publication</title>
+<script src="https://cdn.jsdelivr.net/npm/app-info-parser/dist/app-info-parser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--ink:#0d1117;--nav:#111827;--surface:#fff;--surface2:#f6f8fb;--line:#e2e8f0;--text:#182230;--muted:#6b7788;--blue:#2563eb;--blueSoft:#eaf1ff;--green:#16835b;--greenSoft:#e9f8f1;--red:#c93c4b;--redSoft:#fff0f2;--amber:#9a6700;--shadow:0 12px 34px #15213b0e;--radius:16px}*{box-sizing:border-box;margin:0;padding:0}body{min-height:100vh;background:var(--surface2);color:var(--text);font:14px Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:24px}.shell{min-height:100vh;display:grid;grid-template-columns:260px 1fr}.sidebar{background:var(--nav);color:#dbe5f4;padding:22px 15px;display:flex;flex-direction:column;gap:26px}.brand{display:flex;align-items:center;gap:11px;padding:0 8px}.brand-mark{width:35px;height:35px;border:1px solid #7ea6ff;border-radius:10px;display:grid;place-items:center;color:#9db9ff;font-weight:900}.brand strong{display:block;letter-spacing:.02em}.brand small{display:block;color:#8fa1bc;font-size:11px;margin-top:2px}.nav-label{padding:0 11px;color:#71819a;text-transform:uppercase;letter-spacing:.12em;font-size:10px;font-weight:800}.nav{display:grid;gap:5px}.nav-item{border:0;background:transparent;color:#9eabc0;text-align:left;border-radius:10px;padding:12px 12px;display:flex;align-items:center;gap:11px;cursor:pointer;font:inherit}.nav-item:hover{background:#1d2a40;color:white}.nav-item.active{background:#243a68;color:white;box-shadow:inset 3px 0 var(--blue)}.nav-icon{width:20px;text-align:center;font-size:16px}.sidebar-foot{margin-top:auto;border-top:1px solid #263247;padding:17px 9px;color:#75859d;font-size:11px;line-height:1.5}.main{min-width:0}.topbar{height:74px;background:#fffffff2;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,4vw,44px);position:sticky;top:0;z-index:20;backdrop-filter:blur(8px)}.crumb{color:var(--muted);font-size:13px}.crumb strong{color:var(--text);font-size:18px;display:block;margin-top:2px}.top-status{display:flex;align-items:center;gap:9px;color:var(--green);font-size:12px;font-weight:700}.dot{width:8px;height:8px;border-radius:50%;background:#27ae74;box-shadow:0 0 0 4px var(--greenSoft)}.content{max-width:1050px;margin:0 auto;padding:30px clamp(18px,4vw,44px) 45px}.page{display:none}.page.active{display:block}.page-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:22px}.page-head h1{font-size:26px;letter-spacing:-.03em}.page-head p{color:var(--muted);margin-top:5px}.eyebrow{color:var(--blue);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.13em;margin-bottom:8px}.workspace{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,.75fr);gap:18px;align-items:start}.stack{display:grid;gap:16px}.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.card-head{display:flex;align-items:center;gap:12px;padding:18px 20px;border-bottom:1px solid var(--line)}.card-head h2{font-size:14px}.card-head p{color:var(--muted);font-size:12px;margin-top:3px}.step{width:28px;height:28px;border-radius:9px;background:var(--blueSoft);color:var(--blue);display:grid;place-items:center;font-weight:800;font-size:12px}.card-body{padding:20px}.field{margin-bottom:16px}.field:last-child{margin-bottom:0}.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;color:var(--muted);font-size:12px;font-weight:700;margin:0 0 7px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:10px;background:#fbfcfe;color:var(--text);padding:11px 12px;font:inherit;outline:0}.field textarea{min-height:105px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:#86a9f7;box-shadow:0 0 0 4px var(--blueSoft)}.hint{font-size:12px;color:var(--muted);line-height:1.5;margin-top:7px}.btn{border:1px solid var(--line);border-radius:10px;padding:11px 14px;background:white;color:var(--text);font:700 13px inherit;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}.btn:hover{border-color:#9fb0c5;background:#f9fbff}.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}.btn-primary:hover{background:#1e4fc2}.btn-danger{color:var(--red);border-color:#f2c5cc;background:var(--redSoft)}.btn-block{width:100%}.btn-row{display:flex;flex-wrap:wrap;gap:9px}.callout{padding:14px;border-radius:12px;background:#f6f9ff;border:1px solid #d9e5ff;color:#475a76;line-height:1.5;font-size:12px}.callout strong{color:var(--text);display:block;margin-bottom:4px}.preview-box{min-height:120px;border:1px dashed #c7d2e2;border-radius:12px;background:#fbfcfe;display:grid;place-items:center;color:var(--muted);text-align:center;padding:15px}.icon-preview img{width:68px;height:68px;object-fit:cover;border-radius:15px;border:1px solid var(--line)}.shots-preview{display:flex;gap:9px;overflow:auto;margin-top:10px;padding-bottom:4px}.shot-thumb{flex:0 0 67px;height:110px;border-radius:9px;overflow:hidden;border:1px solid var(--line)}.shot-thumb img{width:100%;height:100%;object-fit:cover}.ai-card{margin-top:12px;padding:14px;border-radius:12px;background:#f8faff;border:1px solid #d9e5ff;line-height:1.5}.ai-note{font-weight:800;color:var(--blue);margin-bottom:6px}.ai-warn{color:var(--amber);margin:6px 0}.ai-problems{padding-left:18px;color:var(--muted);font-size:12px}.ai-suggestion{margin-top:8px;background:white;border:1px solid var(--line);border-radius:8px;padding:10px}.ai-apply{display:inline-block;margin-top:8px;color:var(--blue);cursor:pointer;font-weight:700;font-size:12px}.err{color:var(--red);font-size:12px;margin-top:8px;min-height:16px}.note{color:var(--muted);line-height:1.55;font-size:12px}.publish-list{display:grid;gap:11px}.publish-list .row{display:flex;justify-content:space-between;align-items:center;gap:15px;background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:15px 17px;box-shadow:var(--shadow)}.publish-list .name{display:flex;align-items:center;gap:11px;font-weight:800}.publish-list .name img{width:39px;height:39px;border-radius:11px;object-fit:cover}.publish-list .edit,.publish-list .rm{font-size:12px;font-weight:800;cursor:pointer}.publish-list .edit{color:var(--blue)}.publish-list .rm{color:var(--red)}.empty{text-align:center;color:var(--muted);padding:24px;border:1px dashed #c9d3e1;border-radius:12px}.token-toggle{width:100%;padding:13px;border:1px dashed #a9b8cc;border-radius:12px;background:transparent;color:var(--blue);font-weight:800;cursor:pointer}.bottom-nav{display:none}.splash{position:fixed;inset:0;background:var(--nav);z-index:100;display:grid;place-items:center;color:white}.splash.fade-out{opacity:0;pointer-events:none;transition:opacity .4s ease}.splash.hidden{display:none}.splash.hide{opacity:0;pointer-events:none;transition:.4s}.splash-inner{text-align:center}.splash-logo{width:64px;height:64px;border-radius:18px;background:#2f62d0;display:grid;place-items:center;font-size:25px;font-weight:900;margin:auto auto 15px}.splash-title{font-weight:800;letter-spacing:.05em}.splash-line{width:130px;height:3px;background:#283650;margin:16px auto;overflow:hidden}.splash-line i{display:block;width:0;height:100%;background:#83a7ff;transition:.3s}.edit-banner{padding:12px 15px;border-radius:11px;background:var(--blueSoft);color:#244b9a;margin-bottom:15px;display:flex;justify-content:space-between;gap:10px;font-size:12px}.cancel{cursor:pointer;font-weight:800}.admin-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:200;padding:11px 16px;border-radius:999px;background:#142033;color:#fff;box-shadow:0 10px 30px #0d172b35}@media(max-width:820px){.shell{grid-template-columns:1fr}.sidebar{display:none}.topbar{height:64px}.content{padding-bottom:85px}.workspace{grid-template-columns:1fr}.bottom-nav{position:fixed;display:flex;bottom:0;left:0;right:0;height:66px;background:#fff;border-top:1px solid var(--line);z-index:30;padding-bottom:env(safe-area-inset-bottom)}.nav-item{flex:1;border:0;background:none;color:var(--muted);font:700 11px inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer}.nav-item.active{color:var(--blue)}.nav-icon{font-size:18px}.top-status{display:none}}@media(max-width:480px){.field-row{grid-template-columns:1fr}.page-head h1{font-size:23px}}
+.page.active{animation:pageIn .28s ease both}.card{animation:cardIn .34s ease both}.card:nth-child(2){animation-delay:.035s}.card:nth-child(3){animation-delay:.07s}.btn,.nav-item,.publish-list .row{transition:transform .16s ease,box-shadow .16s ease,background .16s ease,border-color .16s ease}.btn:active{transform:translateY(1px) scale(.99)}.btn-primary:hover{box-shadow:0 8px 18px rgba(37,99,235,.17)}.nav-item.active{animation:navPulse .35s ease both}.publish-list .row:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(21,33,59,.09)}.shot-thumb{transition:transform .18s ease,box-shadow .18s ease}.shot-thumb:hover{transform:translateY(-3px);box-shadow:0 8px 18px rgba(21,33,59,.13)} @keyframes pageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} @keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} @keyframes navPulse{from{box-shadow:inset 3px 0 transparent}to{box-shadow:inset 3px 0 var(--blue)}} @media @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+:root{--surface:#121a29;--surface2:#0b1220;--line:#263650;--text:#eef4ff;--muted:#91a0b9;--blue:#4f82ff;--blueSoft:#182b53;--greenSoft:#143a31;--redSoft:#3b2029;--shadow:0 18px 45px rgba(0,0,0,.18)}body{background:radial-gradient(circle at 80% -10%,#203a6a 0%,#0b1220 38%,#080e18 100%);color:var(--text)}.topbar{background:rgba(11,18,32,.88);border-color:var(--line)}.crumb{color:var(--muted)}.crumb strong{color:var(--text)}.sidebar{background:rgba(9,15,27,.96);border-right:1px solid var(--line)}.sidebar-foot{border-color:var(--line)}.nav-item{color:#91a0b9}.nav-item:hover{background:#162540;color:#fff}.nav-item.active{background:#183267;color:#fff}.card{background:rgba(18,26,41,.94);border-color:var(--line);box-shadow:0 18px 45px rgba(0,0,0,.16)}.card-head{border-color:var(--line)}.card-head p,.page-head p,.hint,.note{color:var(--muted)}.step{background:#183267;color:#7fa6ff}.field label{color:#aebbd0}.field input,.field select,.field textarea{background:#0d1728;border-color:#2a3c5a;color:var(--text)}.field input::placeholder,.field textarea::placeholder{color:#65748c}.field input:focus,.field select:focus,.field textarea:focus{border-color:#6f9aff;box-shadow:0 0 0 4px rgba(79,130,255,.16)}.btn{background:#17243a;border-color:#334867;color:var(--text)}.btn:hover{background:#203252;border-color:#5573a4}.btn-primary{background:linear-gradient(135deg,#4f82ff,#3564d5);border-color:#5c8aff;box-shadow:0 8px 20px rgba(44,94,210,.22)}.btn-primary:hover{background:linear-gradient(135deg,#6290ff,#3b6ee4);box-shadow:0 10px 25px rgba(44,94,210,.34)}.callout{background:#101d33;border-color:#29456f;color:#aabbd6}.callout strong{color:#eef4ff}.preview-box,.empty{background:#0d1728;border-color:#2a3c5a;color:var(--muted)}.publish-list .row{background:#111c2e;border-color:var(--line);box-shadow:0 10px 25px rgba(0,0,0,.12)}.publish-list .row:hover{background:#162540}.token-toggle{border-color:#36527c;background:#101d33;color:#80a6ff}.ai-card{background:#101d33;border-color:#29456f}.ai-suggestion{background:#0d1728;border-color:#2a3c5a}.edit-banner{background:#162f5d;border-color:#4f82ff;color:#d7e4ff}.bottom-nav{background:rgba(9,15,27,.97);border-color:var(--line);backdrop-filter:blur(12px)}.nav-item{color:#7f8da5}.nav-item.active{color:#8fb0ff}.admin-toast{background:#14233b;border:1px solid #3c5e9c}.top-status{color:#69e6aa}.splash{background:#0b1220}.splash-line{background:#1c2d4a}.splash-line i{background:#83a7ff}(max-width:820px){.topbar{background:rgba(9,15,27,.9)}.content{padding:22px 14px 88px}.page-head{display:block}.page-head .btn-primary{width:100%;margin-top:16px}.workspace{gap:14px}.workspace>aside .btn-primary{display:none}.card{border-radius:14px}.card-head{padding:16px}.card-body{padding:16px}.field-row{gap:9px}.bottom-nav{height:72px}.nav-item{font-size:10px}.nav-icon{font-size:19px}}(max-width:480px){.page-head h1{font-size:24px}.page-head p{font-size:13px}.field-row{grid-template-columns:1fr}.publish-list .row{align-items:flex-start;flex-direction:column}.publish-list .row>div:last-child{width:100%;display:flex;justify-content:flex-end}}
+.nav-icon svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.app-picker-trigger{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--text);cursor:pointer;transition:.18s}.app-picker-trigger:hover{border-color:var(--blue);transform:translateY(-1px)}.picker-icon{width:42px;height:42px;border-radius:11px;background:var(--blueSoft);color:var(--blue);display:grid;place-items:center;font-size:20px;overflow:hidden;flex-shrink:0}.picker-icon img{width:100%;height:100%;object-fit:cover}.picker-copy{display:grid;gap:3px;min-width:0}.picker-copy strong{font-size:13px}.picker-copy small{color:var(--muted);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.picker-chevron{margin-left:auto;font-size:24px;color:var(--muted)}.app-picker-modal{position:fixed;inset:0;z-index:120;display:none;align-items:flex-end;justify-content:center;background:rgba(3,8,18,.72);backdrop-filter:blur(7px)}.app-picker-modal.show{display:flex}.app-picker-sheet{width:min(100%,560px);max-height:min(80vh,720px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-bottom:0;border-radius:22px 22px 0 0;box-shadow:0 -20px 55px rgba(0,0,0,.35);animation:sheetIn .24s ease both}.picker-sheet-head{display:flex;justify-content:space-between;align-items:center;padding:18px 18px 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface);z-index:1}.picker-sheet-head strong{display:block;font-size:15px}.picker-sheet-head small{display:block;color:var(--muted);font-size:11px;margin-top:4px}.picker-close{width:32px;height:32px;border:1px solid var(--line);border-radius:50%;background:var(--surface2);color:var(--text);font-size:22px;line-height:1;cursor:pointer}.app-picker-list{padding:8px 12px 20px}.app-picker-option{display:flex;align-items:center;gap:13px;width:100%;padding:12px 8px;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--text);text-align:left;cursor:pointer}.app-picker-option:hover{background:var(--surface2)}.app-picker-option:last-child{border-bottom:0}.app-picker-option .app-icon{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;background:var(--blueSoft);color:var(--blue);font-weight:800;overflow:hidden;flex-shrink:0}.app-picker-option .app-icon img{width:100%;height:100%;object-fit:cover}.app-picker-option .app-info{display:grid;gap:3px;min-width:0}.app-picker-option .app-info strong{font-size:14px}.app-picker-option .app-info small{font-size:11px;color:var(--muted)}.app-picker-option .radio{margin-left:auto;width:22px;height:22px;border:2px solid var(--muted);border-radius:50%;flex-shrink:0}.app-picker-option.selected .radio{border-color:var(--blue);box-shadow:inset 0 0 0 5px var(--surface),inset 0 0 0 9px var(--blue)}.picker-empty{padding:24px;text-align:center;color:var(--muted);font-size:12px}@keyframes sheetIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}.bottom-nav .nav-item,.bottom-nav .nav-item:hover,.bottom-nav .nav-item.active{background:transparent!important;border:0!important;border-top:0!important;border-radius:0!important;box-shadow:none!important;transform:none!important}.bottom-nav .nav-item.active{color:var(--blue)!important}.bottom-nav .nav-item.active .nav-icon{color:var(--blue)!important}.bottom-nav .nav-item:active{background:rgba(79,130,255,.08)!important}
+.category-trigger{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:12px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--text);cursor:pointer;transition:.18s}.category-trigger:hover{border-color:var(--blue);transform:translateY(-1px)}.category-icon{width:42px;height:42px;border-radius:11px;background:var(--blueSoft);color:var(--blue);display:grid;place-items:center;font-size:19px;flex-shrink:0}.category-copy{display:grid;gap:3px}.category-copy strong{font-size:13px}.category-copy small{font-size:11px;color:var(--muted)}.category-list{display:grid;grid-template-columns:1fr 1fr;padding:10px;gap:8px}@media(max-width:480px){.category-list{grid-template-columns:1fr}}.category-option{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:11px;background:var(--surface2);color:var(--text);text-align:left;cursor:pointer;transition:.16s}.category-option:hover,.category-option.selected{border-color:var(--blue);background:var(--blueSoft)}.category-option .category-option-icon{width:31px;height:31px;display:grid;place-items:center;border-radius:9px;background:var(--surface);color:var(--blue);font-size:16px}.category-option strong{font-size:12px}.confirm-modal{position:fixed;inset:0;z-index:150;display:none;place-items:center;background:rgba(3,8,18,.78);backdrop-filter:blur(7px);padding:20px}.confirm-modal.show{display:grid}.confirm-card{width:min(100%,420px);background:var(--surface);border:1px solid #703642;border-radius:18px;box-shadow:0 22px 70px rgba(0,0,0,.48);padding:22px;animation:confirmIn .22s ease both}.confirm-icon{width:52px;height:52px;border-radius:15px;display:grid;place-items:center;background:var(--redSoft);color:var(--red);font-size:24px;margin-bottom:15px}.confirm-card h2{font-size:19px}.confirm-card p{color:var(--muted);font-size:13px;line-height:1.55;margin:8px 0 18px}.confirm-card strong{color:var(--text)}.confirm-actions{display:grid;grid-template-columns:1fr 1.4fr;gap:9px}.confirm-actions button{padding:12px;border-radius:10px;font:800 13px inherit;cursor:pointer}.confirm-cancel{background:var(--surface2);border:1px solid var(--line);color:var(--text)}.confirm-delete{background:var(--red);border:1px solid var(--red);color:white;box-shadow:0 8px 18px rgba(201,60,75,.25)}.confirm-delete:hover{filter:brightness(1.1);transform:translateY(-1px)}@keyframes confirmIn{from{opacity:0;transform:scale(.96) translateY(7px)}to{opacity:1;transform:none}}.publish-list .edit,.publish-list .rm{display:inline-flex;align-items:center;gap:5px;padding:7px 9px;border:1px solid var(--line);border-radius:8px}.publish-list .edit:hover{background:var(--blueSoft)}.publish-list .rm:hover{background:var(--redSoft)}</style>
+</head>
+<body>
+<div id="splashScreen" class="splash"><div class="splash-inner"><div class="splash-logo">D</div><div class="splash-title">DEVADMIN</div><div class="splash-line"><i id="splashBarFill"></i></div></div></div>
+<div class="shell">
+<aside class="sidebar"><div class="brand"><div class="brand-mark">D</div><div><strong>DevAdmin</strong><small>Publication console</small></div></div><div class="nav-label">Workspace</div><nav class="nav"><button class="nav-item active" id="tabBtnPublish" onclick="switchTab('publish')"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span><span>Publier une app</span></button><button class="nav-item" id="tabBtnApps" onclick="switchTab('apps')"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></span><span>Catalogue</span></button><button class="nav-item" id="tabBtnDevs" onclick="switchTab('devs')"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/></svg></span><span>Développeurs</span></button><button class="nav-item" id="tabBtnSettings" onclick="switchTab('settings')"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 15.2a2 2 0 0 0 .3 2.2l.1.1-2.5 2.5-.1-.1a2 2 0 0 0-2.2-.3 2 2 0 0 0-1.2 1.8v.1h-3.5v-.1a2 2 0 0 0-1.2-1.8 2 2 0 0 0-2.2.3l-.1.1-2.5-2.5.1-.1a2 2 0 0 0 .3-2.2 2 2 0 0 0-1.8-1.2h-.1v-3.5h.1a2 2 0 0 0 1.8-1.2 2 2 0 0 0-.3-2.2l-.1-.1 2.5-2.5.1.1a2 2 0 0 0 2.2.3 2 2 0 0 0 1.2-1.8v-.1h3.5v.1a2 2 0 0 0 1.2 1.8 2 2 0 0 0 2.2-.3l.1-.1 2.5 2.5-.1.1a2 2 0 0 0-.3 2.2 2 2 0 0 0 1.8 1.2h.1V14h-.1a2 2 0 0 0-1.8 1.2Z"/></svg></span><span>API & accès</span></button></nav><div class="sidebar-foot">Console privée<br><span>Créé par NPS.NELSON</span></div></aside>
+<main class="main"><header class="topbar"><div class="crumb">DevAdmin <strong id="topTitle">Publier une application</strong></div><div class="top-status"><span class="dot"></span> Services opérationnels</div></header><div class="content">
+<section id="viewPublish" class="page active"><div class="page-head"><div><div class="eyebrow">Release workspace</div><h1>Publier une application</h1><p>Prépare une fiche claire, complète et prête pour le catalogue.</p></div><button class="btn btn-primary" id="publishBtn" onclick="publishApp()">Publier l'application</button></div><div id="updatingBanner" class="edit-banner" style="display:none"><span id="updatingText"></span><span class="cancel" onclick="cancelEdit()">Annuler</span></div><div class="workspace"><div class="stack"><div class="card"><div class="card-head"><span class="step">01</span><div><h2>Identité du produit</h2><p>Les informations visibles dans le catalogue.</p></div></div><div class="card-body"><div class="field"><label for="fName">Nom de l'application</label><input id="fName" placeholder="ex. NPS Assistant"></div><div class="field-row"><div class="field"><label for="fCat">Catégorie</label><button type="button" class="category-trigger" id="categoryTrigger" onclick="openCategoryPicker()"><span class="category-icon" id="categoryIcon">▣</span><span class="category-copy"><strong id="categoryName">Outils</strong><small id="categoryMeta">Catégorie de l’application</small></span><span class="picker-chevron">›</span></button><select id="fCat" aria-hidden="true" tabindex="-1" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px"><option>Outils</option><option>Jeux</option><option>Productivité</option><option>Réseaux sociaux</option><option>Divertissement</option><option>Actualités</option><option>Éducation</option><option>Finance</option><option>Photo & vidéo</option></select><div id="categoryModal" class="app-picker-modal" aria-hidden="true"><div class="app-picker-sheet"><div class="picker-sheet-head"><div><strong>Choisir une catégorie</strong><small>Classe l’application dans la bonne section</small></div><button type="button" class="picker-close" onclick="closeCategoryPicker()">×</button></div><div id="categoryList" class="category-list"></div></div></div></div><div class="field"><label for="fDev">Développeur</label><input id="fDev" placeholder="ex. ESPACE NPS"></div></div><div class="field-row"><div class="field"><label for="fVersion">Version</label><input id="fVersion" placeholder="1.0.0"></div><div class="field"><label for="fSize">Taille</label><input id="fSize" placeholder="45 Mo"></div></div></div></div><div class="card"><div class="card-head"><span class="step">02</span><div><h2>Distribution & médias</h2><p>Importe l'APK et prépare une présentation crédible.</p></div></div><div class="card-body"><div class="field"><label for="fApkFile">Fichier APK</label><input id="fApkFile" type="file" accept=".apk,application/vnd.android.package-archive"><div id="apkParseStatus" class="hint">Les informations détectables seront extraites automatiquement.</div></div><div class="field"><label for="fUrl">Lien direct de téléchargement</label><input id="fUrl" placeholder="https://.../app-release.apk"><div class="hint">Ajoute ce lien pour rendre le bouton Télécharger fonctionnel.</div></div><div class="field-row"><div class="field"><label for="fIconFile">Icône de l'application</label><input id="fIconFile" type="file" accept="image/*"><div id="fIconPreview" class="icon-preview" style="margin-top:10px"></div></div><div class="field"><label for="fShots">Captures d'écran · 6 max</label><input id="fShots" type="file" accept="image/*" multiple><div id="fShotsPreview" class="shots-preview"></div><input id="fShotEditFile" type="file" accept="image/*" style="display:none"></div></div><div id="shotActionMenu" style="display:none"><button type="button" id="shotDeleteBtn">Supprimer</button><button type="button" id="shotEditBtn">Modifier</button></div></div></div><div class="card"><div class="card-head"><span class="step">03</span><div><h2>Description éditoriale</h2><p>Présente la valeur de l'application en quelques phrases.</p></div></div><div class="card-body"><div class="field"><label for="fDesc">Description</label><textarea id="fDesc" placeholder="Décris l'application, son usage et son public."></textarea></div><button type="button" class="btn" id="aiBtn" onclick="analyzeDescription()">Analyser avec l'IA</button><div id="aiResult"></div></div></div><div id="formErr" class="err"></div></div><aside class="stack"><div class="card"><div class="card-head"><span class="step">✓</span><div><h2>Checklist de publication</h2><p>Une fiche soignée inspire confiance.</p></div></div><div class="card-body"><div class="callout"><strong>Avant de publier</strong>Vérifie le nom, la version, le lien APK et la description. Les visuels sont redimensionnés automatiquement pour garder une interface rapide.</div><div style="height:12px"></div><button class="btn btn-primary btn-block" onclick="publishApp()">Publier l'application</button></div></div><div class="card"><div class="card-body note"><strong style="color:var(--text);display:block;margin-bottom:5px">Stockage partagé</strong>La publication écrit dans le catalogue DEV Store via le Worker configuré. Toute application publiée peut devenir visible aux utilisateurs du catalogue.</div></div></aside></div></section>
+<section id="viewApps" class="page"><div class="page-head"><div><div class="eyebrow">Catalog management</div><h1 id="listTitle">Applications publiées</h1><p>Modifie, retire ou prépare les accès API de tes applications.</p></div><button class="btn btn-primary" onclick="switchTab('publish')">＋ Nouvelle app</button></div><div id="publishList" class="publish-list"><div class="empty">Chargement…</div></div><div style="margin-top:14px"><button class="btn" onclick="importDemoApps()">Importer les apps de démonstration</button><div id="importDemoStatus" class="hint"></div></div></section>
+<section id="viewDevs" class="page"><div class="page-head"><div><div class="eyebrow">Access control</div><h1>Développeurs</h1><p>Gère les comptes autorisés à publier sur le catalogue.</p></div></div><div class="workspace"><div class="card" id="devsLoginBox"><div class="card-head"><span class="step">01</span><div><h2>Connexion administrateur</h2><p>Vérification Supabase côté serveur.</p></div></div><div class="card-body"><div class="field"><label for="devsEmail">Email DEV Store</label><input id="devsEmail" placeholder="ton@email.com"></div><div class="field"><label for="devsPassword">Mot de passe</label><input id="devsPassword" type="password" placeholder="••••••••"></div><button class="btn btn-primary btn-block" onclick="devsLogin()">Se connecter</button><div id="devsLoginErr" class="err"></div></div></div><div id="devsApprovalBox" style="display:none" class="card"><div class="card-head"><span class="step">02</span><div><h2>Approuver un développeur</h2><p>Ajoute un compte au programme développeur.</p></div></div><div class="card-body"><div class="field"><label for="devsTargetEmail">Email à approuver</label><input id="devsTargetEmail" placeholder="email@exemple.com"></div><button class="btn btn-primary btn-block" onclick="approveDeveloper()">Approuver comme développeur</button><div id="devsApproveErr" class="err"></div><div id="devsApproveResult" class="hint"></div></div></div></div></section>
+<section id="viewSettings" class="page"><div class="page-head"><div><div class="eyebrow">Security & integrations</div><h1>API & accès</h1><p>Contrôle les jetons utilisés par les agents et les scripts.</p></div></div><div class="card"><div class="card-body"><div class="callout"><strong>Accès privé</strong>Les jetons donnent uniquement les permissions définies sur le catalogue. Ne partage jamais le jeton maître du Worker dans une application publique.</div><div id="tokenList" class="publish-list" style="margin-top:16px"><div class="empty">Chargement…</div></div><button class="token-toggle" id="newTokenToggleBtn" onclick="toggleNewTokenForm()">＋ Générer un accès token</button><div id="newTokenForm" class="card" style="display:none;margin-top:14px;box-shadow:none"><div class="card-body"><div class="field"><label for="tkLabel">Nom du jeton</label><input id="tkLabel" placeholder="ex. Agent de publication"></div><div class="field"><label for="tkScope">Portée</label><select id="tkScope" onchange="onTokenScopeChange()"><option value="single_app">Une seule app</option><option value="all_apps">Toutes les apps</option><option value="account">Compte entier</option></select></div><div id="tkAppRow" class="field"><label>Application concernée</label><button type="button" class="app-picker-trigger" id="appPickerTrigger" onclick="openAppPicker()"><span class="picker-icon">▦</span><span class="picker-copy"><strong id="appPickerName">Choisir une application</strong><small id="appPickerMeta">Les applications du catalogue apparaîtront ici</small></span><span class="picker-chevron">›</span></button><select id="tkAppId" aria-hidden="true" tabindex="-1" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px"></select></div><div id="appPickerModal" class="app-picker-modal" aria-hidden="true"><div class="app-picker-sheet"><div class="picker-sheet-head"><div><strong>Choisir une application</strong><small>Applications actuellement présentes dans le catalogue</small></div><button type="button" class="picker-close" onclick="closeAppPicker()">×</button></div><div id="appPickerList" class="app-picker-list"></div></div></div><div class="field"><label>Permissions</label><div style="display:flex;gap:15px"><label><input type="checkbox" id="tkPermWrite" checked> Modifier</label><label><input type="checkbox" id="tkPermDelete"> Supprimer</label></div></div><button class="btn btn-primary" onclick="createToken()">Générer le jeton</button><div id="tkErr" class="err"></div></div></div><div id="newTokenResult" style="display:none" class="ai-card"><div class="ai-note">Jeton généré</div><div id="newTokenValue" style="font-family:monospace;word-break:break-all;background:white;padding:10px;border:1px solid var(--line);border-radius:8px"></div><div class="btn-row" style="margin-top:10px"><button class="btn" onclick="copyNewTokenLink()">Copier les instructions API</button><button class="btn" onclick="copyNewTokenValue()">Copier le jeton</button></div></div></div></div><div class="card" style="margin-top:16px"><div class="card-body"><div class="field"><label for="adminTokenInput">Jeton maître du Worker · local uniquement</label><input id="adminTokenInput" type="password" placeholder="Colle le jeton maître ici"></div><button class="btn" onclick="saveAdminToken()">Enregistrer sur cet appareil</button><div class="hint">Il est conservé dans le stockage local du navigateur et n'est pas écrit dans le fichier.</div></div></div></section>
+</div></main></div><div class="bottom-nav"><button class="nav-item active" id="mobilePublish" onclick="switchTab('publish')"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>Publier</button><button class="nav-item" id="mobileApps" onclick="switchTab('apps')"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></span>Apps</button><button class="nav-item" id="mobileDevs" onclick="switchTab('devs')"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/></svg></span>Devs</button><button class="nav-item" id="mobileSettings" onclick="switchTab('settings')"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19 15.2a2 2 0 0 0 .3 2.2l.1.1-2.5 2.5-.1-.1a2 2 0 0 0-2.2-.3 2 2 0 0 0-1.2 1.8v.1h-3.5v-.1a2 2 0 0 0-1.2-1.8 2 2 0 0 0-2.2.3l-.1.1-2.5-2.5.1-.1a2 2 0 0 0 .3-2.2 2 2 0 0 0-1.8-1.2h-.1v-3.5h.1a2 2 0 0 0 1.8-1.2 2 2 0 0 0-.3-2.2l-.1-.1 2.5-2.5.1.1a2 2 0 0 0 2.2.3 2 2 0 0 0 1.2-1.8v-.1h3.5v.1a2 2 0 0 0 1.2 1.8 2 2 0 0 0 2.2-.3l.1-.1 2.5 2.5-.1.1a2 2 0 0 0-.3 2.2 2 2 0 0 0 1.8 1.2h.1V14h-.1a2 2 0 0 0-1.8 1.2Z"/></svg></span>Réglages</button></div>
+<script>function saveAdminToken(){const v=document.getElementById('adminTokenInput').value.trim();localStorage.setItem('devadmin_admin_token',v);showAdminToast(v?'Jeton maître enregistré localement.':'Jeton maître effacé.',false);location.reload()}</script>
+<script>
+// ===== Store : remplace window.storage par un Worker Cloudflare (catalogue partagé) =====
+const WORKER_URL = 'https://nps-store-api.nelsonpataule11.workers.dev'; // <-- remplace après déploiement du Worker
+
+// Jeton d'admin privé : donne le droit de publier/modifier/supprimer via l'API du Worker.
+// À renseigner ici (doit être identique au secret ADMIN_TOKEN configuré sur le Worker
+// via `wrangler secret put ADMIN_TOKEN`). Ne JAMAIS mettre ce fichier ou ce jeton dans
+// une app publique — NPS.CONTROL doit rester un outil privé.
+const ADMIN_TOKEN = (localStorage.getItem('devadmin_admin_token') || '').trim(); // <-- colle ton jeton secret ici une fois généré côté Worker
+
+// Client Supabase — uniquement pour l'onglet "Développeurs" (approbation),
+// même projet que DEV Store.
+const SUPABASE_URL = 'https://scfuycacetqsgvccyfmp.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_vSo3RY9ZMYL8gUGp_k4n1A_PEnrKpKX';
+const sbAdmin = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+async function devsLogin(){
+  const email = document.getElementById('devsEmail').value.trim();
+  const password = document.getElementById('devsPassword').value;
+  const err = document.getElementById('devsLoginErr');
+  err.textContent = '';
+  if(!sbAdmin){ err.textContent = "Client Supabase indisponible (pas de connexion ?)."; return; }
+  if(!email || !password){ err.textContent = "Renseigne ton email et ton mot de passe."; return; }
+
+  const { error } = await sbAdmin.auth.signInWithPassword({ email, password });
+  if(error){ err.textContent = error.message; return; }
+
+  document.getElementById('devsLoginBox').style.display = 'none';
+  document.getElementById('devsApprovalBox').style.display = 'block';
+}
+
+async function approveDeveloper(){
+  const targetEmail = document.getElementById('devsTargetEmail').value.trim();
+  const err = document.getElementById('devsApproveErr');
+  const result = document.getElementById('devsApproveResult');
+  err.textContent = ''; result.textContent = '';
+  if(!targetEmail){ err.textContent = "Renseigne l'email du compte à approuver."; return; }
+
+  const { error } = await sbAdmin.rpc('approve_developer', { target_email: targetEmail });
+  if(error){
+    err.textContent = "Échec : " + error.message + " (ton compte n'est peut-être pas autorisé, ou l'email ne correspond à aucun compte).";
+    return;
+  }
+  result.textContent = `${targetEmail} est maintenant développeur sur DEV Store.`;
+  document.getElementById('devsTargetEmail').value = '';
+}
+
+// Vérifie si une session admin est déjà active (évite de se reconnecter à chaque ouverture)
+(async function checkDevsSession(){
+  if(!sbAdmin) return;
+  try{
+    const { data:{ session } } = await sbAdmin.auth.getSession();
+    if(session){
+      document.getElementById('devsLoginBox').style.display = 'none';
+      document.getElementById('devsApprovalBox').style.display = 'block';
+    }
+  }catch(e){}
+})();
+
+
+// URL publique réelle de DEV Store une fois hébergé (même constante que dans devst-5-9.html).
+const DEVST_PUBLIC_URL = ''; // ex: 'https://npsgaming.github.io/devst.html'
+
+// Copie robuste : tente l'API moderne, puis un repli compatible avec les WebView
+// restreintes (content://, contexte non sécurisé) où navigator.clipboard échoue.
+async function copyToClipboard(text){
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  }catch(e){}
+  try{
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    ta.style.top = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    const ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+    return ok;
+  }catch(e){
+    return false;
+  }
+}
+
+function copyPublicLink(id, ev){
+  if(ev) ev.stopPropagation();
+  if(!DEVST_PUBLIC_URL){
+    showAdminToast("Renseigne DEVST_PUBLIC_URL dans le code une fois DEV Store hébergé en ligne.", true);
+    return;
+  }
+  const url = new URL(DEVST_PUBLIC_URL);
+  url.searchParams.set('app', id);
+  copyToClipboard(url.toString()).then(ok =>
+    showAdminToast(ok ? 'Lien public copié — consultation seule, compte requis pour télécharger.' : "Impossible de copier automatiquement. Maintiens le doigt sur le texte pour copier manuellement.", !ok)
+  );
+}
+
+// Un agent IA distant ne peut jamais ouvrir un lien content:// ou file:// (local à l'appareil).
+// Ce qu'il lui faut, c'est appeler directement l'API du Worker : voici comment.
+// N'affiche QUE les opérations que ce jeton précis peut réellement effectuer — jamais plus,
+// même si le serveur refuserait de toute façon une action non autorisée.
+function buildAgentInstructions(token, scope, appId, appName, permissions){
+  const perms = permissions || { write: true, delete: false };
+  const scopeDesc = scope === 'account' ? 'toutes les apps (compte entier)'
+    : scope === 'all_apps' ? 'toutes les apps'
+    : `l'app "${appName || appId}" uniquement (id: ${appId})`;
+
+  let out = `=== Accès API DEV Store — Cloudflare Worker ===
+URL de base : ${WORKER_URL}
+Jeton d'accès : ${token}
+Portée autorisée : ${scopeDesc}
+Permissions de ce jeton : ${perms.write ? 'Modifier' : ''}${perms.write && perms.delete ? ' + ' : ''}${perms.delete ? 'Supprimer' : ''}${!perms.write && !perms.delete ? 'Lecture seule' : ''}
+
+Lire les données actuelles d'une app :
+GET ${WORKER_URL}/kv/get?key=apps:ID_APP`;
+
+  if(perms.write){
+    out += `
+
+Créer ou mettre à jour une app (remplace tout le JSON) :
+POST ${WORKER_URL}/kv/set
+Content-Type: application/json
+{"key":"apps:ID_APP","value":"<JSON complet de l'app, en chaîne>","token":"${token}"}`;
+  }
+
+  if(perms.delete){
+    out += `
+
+Supprimer une app :
+POST ${WORKER_URL}/kv/delete
+Content-Type: application/json
+{"key":"apps:ID_APP","token":"${token}"}`;
+  }
+
+  return out;
+}
+
+function copyPrivateLink(id, ev){
+  if(ev) ev.stopPropagation();
+  const suitable = TOKENS.find(t => !t.revoked && (
+    (t.scope === 'single_app' && String(t.appId) === String(id)) ||
+    t.scope === 'all_apps' || t.scope === 'account'
+  ));
+  if(!suitable){
+    showAdminToast("Aucun jeton d'accès pour cette app. Va dans Paramètres → API pour en générer un.", true);
+    switchTab('settings');
+    return;
+  }
+  const app = PUBLISHED.find(a => a.id === id);
+  const instructions = buildAgentInstructions(suitable.token, suitable.scope, id, app ? app.name : null, suitable.permissions);
+  copyToClipboard(instructions).then(ok =>
+    showAdminToast(ok
+      ? `Instructions API copiées (jeton "${suitable.label}") — colle-les à ton agent de confiance.`
+      : "Impossible de copier automatiquement. Ouvre Paramètres → API pour retrouver ce jeton.", !ok)
+  );
+}
+
+const Store = {
+  async get(key, shared){
+    try{
+      const res = await fetch(`${WORKER_URL}/kv/get?key=${encodeURIComponent(key)}`);
+      if(!res.ok) return null;
+      const data = await res.json();
+      return data.value != null ? {key, value:data.value, shared} : null;
+    }catch(e){ return null; }
+  },
+  async set(key, value, shared){
+    const res = await fetch(`${WORKER_URL}/kv/set`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({key, value, token: ADMIN_TOKEN})
+    });
+    if(!res.ok) throw new Error('set failed');
+    return {key, value, shared};
+  },
+  async delete(key, shared){
+    const res = await fetch(`${WORKER_URL}/kv/delete`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({key, token: ADMIN_TOKEN})
+    });
+    if(!res.ok) throw new Error('delete failed');
+    return {key, deleted:true, shared};
+  },
+  async list(prefix, shared){
+    try{
+      const res = await fetch(`${WORKER_URL}/kv/list?prefix=${encodeURIComponent(prefix||'')}`);
+      if(!res.ok) return {keys:[], prefix, shared};
+      const data = await res.json();
+      return {keys:data.keys||[], prefix, shared};
+    }catch(e){ return {keys:[], prefix, shared}; }
+  }
+};
+
+let PUBLISHED = [];
+let TOKENS = [];
+let lastCreatedToken = null;
+let uploadedIcon = null;
+let uploadedShots = [];
+let uploadsProcessing = 0; // compteur de traitements d'images en cours (icône + captures)
+let editingId = null; // si défini, publishApp() met à jour cette app au lieu d'en créer une nouvelle
+
+function setPublishBtnBusy(busy){
+  const btn = document.getElementById('publishBtn');
+  if(!btn) return;
+  btn.disabled = busy;
+  if(busy) btn.textContent = "Traitement des images...";
+  else btn.textContent = "Publier l'app";
+}
+
+function resizeImage(file, maxDim, quality, format){
+  format = format || 'image/jpeg';
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if(w > h && w > maxDim){ h = Math.round(h*maxDim/w); w = maxDim; }
+        else if(h > maxDim){ w = Math.round(w*maxDim/h); h = maxDim; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL(format, quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function resizeDataUrl(dataUrl, maxDim, quality, format){
+  format = format || 'image/png';
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if(w > h && w > maxDim){ h = Math.round(h*maxDim/w); w = maxDim; }
+      else if(h > maxDim){ w = Math.round(w*maxDim/h); h = maxDim; }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(canvas.toDataURL(format, quality));
+    };
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+}
+
+document.getElementById('fApkFile').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  const status = document.getElementById('apkParseStatus');
+  if(!file) return;
+
+  // La taille du fichier ne nécessite aucune librairie : toujours fiable.
+  document.getElementById('fSize').value = (file.size / (1024*1024)).toFixed(1) + ' Mo';
+
+  // Nom de secours à partir du nom de fichier, au cas où l'analyse échoue.
+  const fallbackName = file.name.replace(/\.apk$/i,'').replace(/[-_]+/g,' ').trim();
+  if(fallbackName) document.getElementById('fName').value = fallbackName;
+
+  if(typeof window.AppInfoParser === 'undefined'){
+    status.textContent = "Librairie d'analyse APK non chargée (pas de connexion ?) — nom deviné depuis le fichier, complète le reste à la main.";
+    return;
+  }
+
+  status.textContent = "Analyse de l'APK en cours...";
+  try{
+    const parser = new window.AppInfoParser(file);
+    const result = await parser.parse();
+
+    const appName = (result && (result.application && result.application.label)) || result.name || fallbackName;
+    if(appName) document.getElementById('fName').value = appName;
+
+    if(result.versionName) document.getElementById('fVersion').value = result.versionName;
+
+    if(result.icon){
+      uploadsProcessing++;
+      setPublishBtnBusy(true);
+      const iconSrc = result.icon.startsWith('data:') ? result.icon : ('data:image/png;base64,' + result.icon);
+      uploadedIcon = await resizeDataUrl(iconSrc, 512, 0.92, 'image/png');
+      document.getElementById('fIconPreview').innerHTML =
+        `<img src="${uploadedIcon}" style="width:56px;height:56px;object-fit:cover;border-radius:var(--radius);border:1px solid var(--border);">`;
+      uploadsProcessing--;
+      if(uploadsProcessing <= 0) setPublishBtnBusy(false);
+    }
+
+    status.textContent = "Infos extraites de l'APK — vérifie et complète le lien de téléchargement.";
+  }catch(err){
+    status.textContent = "Impossible d'analyser cet APK (" + err.message + ") — nom deviné depuis le fichier, complète le reste à la main.";
+  }
+});
+
+document.getElementById('fIconFile').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  if(!file) return;
+  uploadsProcessing++;
+  setPublishBtnBusy(true);
+  uploadedIcon = await resizeImage(file, 512, 0.92, 'image/png');
+  document.getElementById('fIconPreview').innerHTML =
+    `<img src="${uploadedIcon}" style="width:56px;height:56px;object-fit:cover;border-radius:var(--radius);border:1px solid var(--border);">`;
+  uploadsProcessing--;
+  if(uploadsProcessing <= 0) setPublishBtnBusy(false);
+});
+
+const MAX_SCREENSHOTS = 6;
+let selectedShotIndex = -1;
+let shotPressTimer = null;
+let shotLongPressTriggered = false;
+
+function renderShotsPreview(statusText){
+  const preview = document.getElementById('fShotsPreview');
+  preview.innerHTML = uploadedShots.map((s, index) =>
+    `<div class="shot-thumb" data-shot-index="${index}" title="Maintenir appuyé pour modifier ou supprimer">
+      <img src="${s}" alt="Capture ${index + 1}">
+    </div>`
+  ).join('') + (statusText ? `<span style="color:var(--text-dim); font-size:12px; align-self:center;">${statusText}</span>` : '');
+}
+
+function closeShotActions(){
+  selectedShotIndex = -1;
+  const menu = document.getElementById('shotActionMenu');
+  menu.classList.remove('show');
+  menu.setAttribute('aria-hidden', 'true');
+}
+
+function openShotActions(index){
+  if(index < 0 || index >= uploadedShots.length) return;
+  selectedShotIndex = index;
+  const menu = document.getElementById('shotActionMenu');
+  menu.classList.add('show');
+  menu.setAttribute('aria-hidden', 'false');
+}
+
+const shotsPreview = document.getElementById('fShotsPreview');
+shotsPreview.addEventListener('pointerdown', e => {
+  const thumb = e.target.closest('.shot-thumb');
+  if(!thumb) return;
+  shotLongPressTriggered = false;
+  clearTimeout(shotPressTimer);
+  shotPressTimer = setTimeout(() => {
+    shotLongPressTriggered = true;
+    openShotActions(Number(thumb.dataset.shotIndex));
+  }, 600);
+});
+['pointerup','pointercancel','pointerleave'].forEach(type => {
+  shotsPreview.addEventListener(type, () => clearTimeout(shotPressTimer));
+});
+
+document.getElementById('shotActionMenu').addEventListener('click', e => {
+  if(e.target.id === 'shotActionMenu') closeShotActions();
+});
+
+document.getElementById('shotDeleteBtn').addEventListener('click', () => {
+  if(selectedShotIndex < 0) return;
+  uploadedShots.splice(selectedShotIndex, 1);
+  closeShotActions();
+  renderShotsPreview();
+});
+
+document.getElementById('shotEditBtn').addEventListener('click', () => {
+  if(selectedShotIndex < 0) return;
+  document.getElementById('fShotEditFile').value = '';
+  document.getElementById('fShotEditFile').click();
+});
+
+document.getElementById('fShotEditFile').addEventListener('change', async e => {
+  const file = e.target.files[0];
+  const index = selectedShotIndex;
+  closeShotActions();
+  if(!file || index < 0 || index >= uploadedShots.length) return;
+  uploadsProcessing++;
+  setPublishBtnBusy(true);
+  renderShotsPreview('Modification...');
+  try{
+    uploadedShots[index] = await resizeImage(file, 1080, 0.85);
+    renderShotsPreview();
+  }catch(err){
+    document.getElementById('formErr').textContent = 'Impossible de modifier cette capture.';
+    renderShotsPreview();
+  }finally{
+    e.target.value = '';
+    uploadsProcessing--;
+    if(uploadsProcessing <= 0) setPublishBtnBusy(false);
+  }
+});
+
+document.getElementById('fShots').addEventListener('change', async e => {
+  const selectedFiles = Array.from(e.target.files);
+  const remaining = Math.max(0, MAX_SCREENSHOTS - uploadedShots.length);
+  const files = selectedFiles.slice(0, remaining);
+  if(!files.length){
+    if(selectedFiles.length && uploadedShots.length >= MAX_SCREENSHOTS){
+      document.getElementById('formErr').textContent = 'Maximum de 6 captures atteint (4 recommandé).';
+    }
+    e.target.value = '';
+    return;
+  }
+
+  uploadsProcessing++;
+  setPublishBtnBusy(true);
+  const previousShots = uploadedShots.slice();
+  renderShotsPreview('Importation...');
+  try{
+    const newShots = [];
+    for(const f of files){
+      newShots.push(await resizeImage(f, 1080, 0.85));
+    }
+    uploadedShots = previousShots.concat(newShots).slice(0, MAX_SCREENSHOTS);
+    renderShotsPreview();
+    if(selectedFiles.length > files.length){
+      document.getElementById('formErr').textContent = 'Limite de 6 captures atteinte (4 recommandé).';
+    }
+  }catch(err){
+    renderShotsPreview();
+    document.getElementById('formErr').textContent = 'Impossible de traiter une capture sélectionnée.';
+  }finally{
+    e.target.value = '';
+    uploadsProcessing--;
+    if(uploadsProcessing <= 0) setPublishBtnBusy(false);
+  }
+});
+
+async function analyzeDescription(){
+  const text = document.getElementById('fDesc').value.trim();
+  const resultBox = document.getElementById('aiResult');
+  const btn = document.getElementById('aiBtn');
+
+  if(!text){
+    resultBox.innerHTML = '<div class="ai-card"><span class="ai-error">Écris d\'abord une description à analyser.</span></div>';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Analyse en cours...';
+  resultBox.innerHTML = '';
+
+  try{
+    const res = await fetch(`${WORKER_URL}/ai/analyze-description`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ text })
+    });
+    const data = await res.json();
+
+    if(!res.ok || !data.ok){
+      resultBox.innerHTML = `<div class="ai-card"><span class="ai-error">Erreur IA : ${data.error || 'inconnue'}</span></div>`;
+      return;
+    }
+
+    const a = data.analysis;
+    const problemsHtml = (a.problemes && a.problemes.length)
+      ? `<ul class="ai-problems">${a.problemes.map(p => `<li>${p}</li>`).join('')}</ul>`
+      : '';
+    const suggestionHtml = a.suggestion_amelioree
+      ? `<div class="ai-suggestion">${a.suggestion_amelioree}</div>
+         <span class="ai-apply" onclick="applyAiSuggestion()">Utiliser cette version</span>`
+      : '';
+
+    resultBox.innerHTML = `
+      <div class="ai-card">
+        <div class="ai-note">Note qualité : ${a.note_qualite}/10</div>
+        ${a.trop_courte ? '<div class="ai-warn">Description un peu courte pour un store.</div>' : ''}
+        ${problemsHtml}
+        ${suggestionHtml}
+      </div>
+    `;
+    window._lastAiSuggestion = a.suggestion_amelioree || '';
+  }catch(e){
+    resultBox.innerHTML = '<div class="ai-card"><span class="ai-error">Impossible de contacter le service IA.</span></div>';
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "Analyser avec l'IA";
+  }
+}
+
+function applyAiSuggestion(){
+  if(window._lastAiSuggestion){
+    document.getElementById('fDesc').value = window._lastAiSuggestion;
+  }
+}
+
+// Publie d'un coup les 3 anciennes apps de démonstration (autrefois codées en dur dans
+// DEV Store) comme de vraies apps du catalogue, modifiables ensuite normalement.
+async function importDemoApps(){
+  const status = document.getElementById('importDemoStatus');
+  const demo = [
+    { name:"NPS Assistant", dev:"ESPACE NPS", cat:"Outils", icon:"⚡", version:"1.4.0", size:"38",
+      desc:"Assistant IA intégré pour Android, pensé pour les développeurs qui codent depuis leur téléphone. Connecté à plusieurs moteurs IA pour la planification et la revue de code.",
+      apkUrl:"#", rating:4.8,
+      reviews:[
+        {name:"Karim", stars:5, text:"Rapide et stable, exactement ce qu'il me fallait pour coder en déplacement.", date:"", authorId:null, helpful:null},
+        {name:"Sofia", stars:4, text:"Très pratique, j'attends juste plus de thèmes.", date:"", authorId:null, helpful:null}
+      ] },
+    { name:"Orbit Runner", dev:"Pixel Forge", cat:"Jeux", icon:"◆", version:"2.1.3", size:"96",
+      desc:"Jeu d'arcade spatial en 2D avec physique à gravité variable. 40 niveaux, mode infini, classement en ligne.",
+      apkUrl:"#", rating:4.5,
+      reviews:[{name:"Yassine", stars:5, text:"Addictif, les contrôles sont très précis.", date:"", authorId:null, helpful:null}] },
+    { name:"NoteFlow", dev:"Studio Lys", cat:"Productivité", icon:"▣", version:"0.9.2", size:"22",
+      desc:"Prise de notes rapide avec organisation automatique par tags et recherche instantanée hors-ligne.",
+      apkUrl:"#", rating:4.2, reviews:[] }
+  ];
+  status.textContent = "Import en cours…";
+  let ok = 0;
+  for(let i=0; i<demo.length; i++){
+    const id = Date.now() + i; // éviter toute collision d'ID entre les 3
+    const appData = { id, ...demo[i], screenshots: [] };
+    try{
+      await Store.set('apps:'+id, JSON.stringify(appData), true);
+      ok++;
+    }catch(e){}
+  }
+  status.textContent = `${ok}/${demo.length} apps importées.`;
+  await loadPublished();
+}
+
+async function loadPublished(){
+  PUBLISHED = [];
+  try{
+    const listRes = await Store.list('apps:', true);
+    const keys = (listRes && listRes.keys) || [];
+    for(const k of keys){
+      try{
+        const r = await Store.get(k, true);
+        if(r) PUBLISHED.push(JSON.parse(r.value));
+      }catch(e){}
+    }
+    PUBLISHED.sort((a,b)=>b.id-a.id);
+  }catch(e){
+    document.getElementById('publishList').innerHTML =
+      '<div class="empty">Stockage indisponible ici (fonctionne uniquement dans l\'aperçu Claude.ai).</div>';
+    document.getElementById('listTitle').textContent = 'Apps publiées';
+    return;
+  }
+  renderList();
+}
+
+function renderList(){
+  document.getElementById('listTitle').textContent = `Apps publiées (${PUBLISHED.length})`;
+  const el = document.getElementById('publishList');
+  if(!PUBLISHED.length){
+    el.innerHTML = '<div class="empty">Aucune app publiée pour l\'instant.</div>';
+    return;
+  }
+  el.innerHTML = PUBLISHED.map(a => `
+    <div class="row" style="flex-direction:column; align-items:stretch; gap:8px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+        <div class="name">
+          ${a.icon && a.icon.startsWith('data:image')
+            ? `<img src="${a.icon}" style="width:20px;height:20px;object-fit:cover;border-radius:4px;">`
+            : `<span>${a.icon||'—'}</span>`}
+          <span>${a.name} — v${a.version}</span>
+        </div>
+        <div style="display:flex; gap:12px; flex-shrink:0;">
+          <span class="edit" onclick="editApp(${a.id})">Modifier</span>
+          <span class="rm" onclick="startRemoveCountdown(${a.id}, event)">Retirer</span>
+        </div>
+      </div>
+      <div style="display:flex; gap:14px; font-size:11px; font-family:'JetBrains Mono';">
+        <span style="color:var(--text-dim); cursor:pointer;" onclick="copyPublicLink(${a.id}, event)">Lien public</span>
+        <span style="color:var(--violet); cursor:pointer;" onclick="copyPrivateLink(${a.id}, event)">Accès API (IA)</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function editApp(id){
+  const a = PUBLISHED.find(x => x.id === id);
+  if(!a) return;
+  editingId = id;
+  switchTab('publish');
+
+  document.getElementById('fName').value = a.name || '';
+  document.getElementById('fCat').value = a.cat || 'Outils';
+  document.getElementById('fDev').value = a.dev || '';
+  document.getElementById('fVersion').value = a.version || '';
+  document.getElementById('fSize').value = a.size || '';
+  document.getElementById('fUrl').value = a.apkUrl === '#' ? '' : (a.apkUrl || '');
+  document.getElementById('fDesc').value = a.desc || '';
+
+  uploadedIcon = (a.icon && a.icon.startsWith('data:image')) ? a.icon : null;
+  document.getElementById('fIconPreview').innerHTML = uploadedIcon
+    ? `<img src="${uploadedIcon}" style="width:56px;height:56px;object-fit:cover;border-radius:var(--radius);border:1px solid var(--border);">`
+    : '';
+
+  uploadedShots = (a.screenshots || []).slice(0, MAX_SCREENSHOTS);
+  renderShotsPreview();
+
+  document.getElementById('aiResult').innerHTML = '';
+
+  const banner = document.getElementById('updatingBanner');
+  banner.style.display = 'flex';
+  document.getElementById('updatingText').textContent = `Modification de "${a.name}" — publier mettra à jour cette app (avis conservés).`;
+  document.getElementById('publishBtn').textContent = "Mettre à jour l'app";
+
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function cancelEdit(){
+  editingId = null;
+  document.getElementById('fName').value = '';
+  document.getElementById('fDev').value = '';
+  document.getElementById('fVersion').value = '';
+  document.getElementById('fSize').value = '';
+  document.getElementById('fUrl').value = '';
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fIconFile').value = '';
+  document.getElementById('fApkFile').value = '';
+  document.getElementById('apkParseStatus').textContent = '';
+  document.getElementById('fShots').value = '';
+  document.getElementById('fIconPreview').innerHTML = '';
+  document.getElementById('fShotsPreview').innerHTML = '';
+  closeShotActions();
+  document.getElementById('aiResult').innerHTML = '';
+  uploadedIcon = null;
+  uploadedShots = [];
+  document.getElementById('updatingBanner').style.display = 'none';
+  document.getElementById('publishBtn').textContent = "📤 Publier l'app";
+}
+
+async function publishApp(){
+  const btn = document.getElementById('publishBtn');
+  const err = document.getElementById('formErr');
+  err.textContent = '';
+
+  const name = document.getElementById('fName').value.trim();
+  const cat = document.getElementById('fCat').value;
+  const icon = uploadedIcon || '📦';
+  const dev = document.getElementById('fDev').value.trim() || 'Inconnu';
+  const version = document.getElementById('fVersion').value.trim() || '1.0.0';
+  const sizeRaw = document.getElementById('fSize').value.trim().replace(/\s*Mo\s*$/i,'') || '—';
+  const apkUrl = document.getElementById('fUrl').value.trim() || '#';
+  const desc = document.getElementById('fDesc').value.trim() || 'Pas de description fournie.';
+  const screenshots = uploadedShots.slice();
+
+  if(!name){
+    err.textContent = "Le nom de l'app est obligatoire.";
+    return;
+  }
+  const apkUrlRaw = document.getElementById('fUrl').value.trim();
+  if(!apkUrlRaw){
+    err.style.color = 'var(--amber)';
+    err.textContent = "Aucun lien de téléchargement — l'app sera publiée mais le bouton \"Télécharger\" ne marchera pas tant que tu n'ajoutes pas un lien direct.";
+  } else {
+    err.style.color = '';
+  }
+
+  // Mode mise à jour : on réutilise l'ID existant (même clé de stockage), donc l'ancienne
+  // fiche est bien remplacée au lieu de créer un doublon. Les avis et la note sont conservés.
+  const isUpdate = editingId !== null;
+  const existing = isUpdate ? PUBLISHED.find(x => x.id === editingId) : null;
+  const id = isUpdate ? editingId : Date.now();
+  const appData = {
+    id, name, dev, cat, icon, version, size: sizeRaw, desc, apkUrl, screenshots,
+    rating: existing ? existing.rating : 0,
+    reviews: existing ? existing.reviews : []
+  };
+
+  btn.disabled = true; btn.textContent = isUpdate ? 'Mise à jour...' : 'Publication...';
+  try{
+    await Store.set('apps:'+id, JSON.stringify(appData), true);
+    await Store.set('notif:'+Date.now(), JSON.stringify({
+      text: isUpdate ? `${name} vient d'être mis à jour en v${version}` : `${name} v${version} vient d'être publié`,
+      time:new Date().toISOString(), unread:true, appId:id
+    }), true);
+  }catch(e){
+    err.style.color = '';
+    err.textContent = "Échec de la sauvegarde (fonctionne uniquement dans l'aperçu Claude.ai pour l'instant).";
+    btn.disabled = false; btn.textContent = isUpdate ? "Mettre à jour l'app" : "Publier l'app";
+    return;
+  }
+
+  err.style.color = '';
+  err.textContent = '';
+  // reset form
+  editingId = null;
+  document.getElementById('updatingBanner').style.display = 'none';
+  document.getElementById('fName').value = '';
+  document.getElementById('fDev').value = '';
+  document.getElementById('fVersion').value = '';
+  document.getElementById('fSize').value = '';
+  document.getElementById('fUrl').value = '';
+  document.getElementById('fDesc').value = '';
+  document.getElementById('fIconFile').value = '';
+  document.getElementById('fApkFile').value = '';
+  document.getElementById('apkParseStatus').textContent = '';
+  document.getElementById('fShots').value = '';
+  document.getElementById('fIconPreview').innerHTML = '';
+  document.getElementById('fShotsPreview').innerHTML = '';
+  closeShotActions();
+  document.getElementById('aiResult').innerHTML = '';
+  uploadedIcon = null;
+  uploadedShots = [];
+
+  btn.disabled = false; btn.textContent = "Publier l'app";
+  await loadPublished();
+}
+
+function startRemoveCountdown(id, ev){
+  if(ev) ev.stopPropagation();
+  const btn = ev.target;
+  if(btn.dataset.confirming === '1') return;
+  btn.dataset.confirming = '1';
+  btn.onclick = null;
+  let n = 3;
+  btn.textContent = String(n);
+  const timer = setInterval(() => {
+    n--;
+    if(n > 0){
+      btn.textContent = String(n);
+    } else {
+      clearInterval(timer);
+      btn.textContent = 'Confirmer ?';
+      btn.onclick = (e2) => { e2.stopPropagation(); removeApp(id, e2); };
+      setTimeout(() => {
+        if(btn.textContent === 'Confirmer ?'){
+          btn.textContent = 'Retirer';
+          btn.onclick = (e2) => startRemoveCountdown(id, e2);
+          delete btn.dataset.confirming;
+        }
+      }, 5000);
+    }
+  }, 1000);
+}
+
+async function removeApp(id, ev){
+  const app = PUBLISHED.find(a => a.id === id);
+  const label = app ? `"${app.name}"` : "cette app";
+
+  const row = ev && ev.target ? ev.target.closest('.row') : null;
+  if(row) row.style.opacity = '0.5';
+
+  try{
+    await Store.delete('apps:'+id, true);
+    showAdminToast(`${label} supprimée du stockage.`, false);
+  }catch(e){
+    showAdminToast(`Échec de la suppression de ${label} — réessaie ou vérifie la connexion.`, true);
+    if(row) row.style.opacity = '1';
+    return;
+  }
+  if(editingId === id) cancelEdit();
+  await loadPublished();
+}
+
+function showAdminToast(msg, isError){
+  let t = document.getElementById('adminToast');
+  if(!t){
+    t = document.createElement('div');
+    t.id = 'adminToast';
+    t.style.cssText = 'position:fixed; left:50%; bottom:26px; transform:translateX(-50%) translateY(20px); padding:10px 18px; border-radius:999px; font-size:12.5px; z-index:99999; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s;';
+    document.body.appendChild(t);
+  }
+  t.style.background = 'var(--surface)';
+  t.style.border = '1px solid ' + (isError ? 'var(--magenta)' : 'var(--cyan)');
+  t.style.color = isError ? 'var(--magenta)' : 'var(--text)';
+  t.style.boxShadow = '0 0 20px ' + (isError ? 'rgba(255,107,203,0.35)' : 'var(--cyan-glow)');
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(t._hideTimer);
+  t._hideTimer = setTimeout(()=>{
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-50%) translateY(20px)';
+  }, 2600);
+}
+
+/* ===== Navigation par onglets ===== */
+function switchTab(tab){
+  document.getElementById('viewPublish').style.display = tab === 'publish' ? 'block' : 'none';
+  document.getElementById('viewApps').style.display = tab === 'apps' ? 'block' : 'none';
+  document.getElementById('viewDevs').style.display = tab === 'devs' ? 'block' : 'none';
+  document.getElementById('viewSettings').style.display = tab === 'settings' ? 'block' : 'none';
+  document.getElementById('tabBtnPublish').classList.toggle('active', tab === 'publish');
+  document.getElementById('tabBtnApps').classList.toggle('active', tab === 'apps');
+  document.getElementById('tabBtnDevs').classList.toggle('active', tab === 'devs');
+  document.getElementById('tabBtnSettings').classList.toggle('active', tab === 'settings');
+  if(tab === 'settings') loadTokens();
+}
+
+/* ===== Gestion des jetons d'accès API ===== */
+async function loadTokens(){
+  const el = document.getElementById('tokenList');
+  if(!ADMIN_TOKEN){
+    el.innerHTML = '<div class="empty">Renseigne ADMIN_TOKEN dans le code (même valeur que le secret configuré sur le Worker) pour gérer les jetons.</div>';
+    return;
+  }
+  el.innerHTML = '<div class="empty">Chargement…</div>';
+  try{
+    const res = await fetch(`${WORKER_URL}/tokens/list?master_token=${encodeURIComponent(ADMIN_TOKEN)}`);
+    const data = await res.json();
+    if(!res.ok){ el.innerHTML = `<div class="empty">${data.error || 'Erreur de chargement'}</div>`; return; }
+    TOKENS = data.tokens || [];
+  }catch(e){
+    el.innerHTML = '<div class="empty">Impossible de contacter le Worker.</div>';
+    return;
+  }
+  if(TOKENS.length === 0){
+    el.innerHTML = '<div class="empty">Aucun jeton généré pour l\'instant.</div>';
+    return;
+  }
+  const scopeLabel = t => t.scope === 'account' ? 'Compte entier'
+    : t.scope === 'all_apps' ? 'Toutes les apps'
+    : 'App : ' + (PUBLISHED.find(a => String(a.id) === String(t.appId))?.name || t.appId);
+  el.innerHTML = TOKENS.map(t => `
+    <div class="row" style="flex-direction:column; align-items:stretch; gap:6px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+        <div class="name"><span>${t.label}</span></div>
+        <span class="rm" onclick="startRevokeCountdown('${t.token}', event)">Révoquer</span>
+      </div>
+      <div style="font-size:11px; color:var(--text-dim); font-family:'JetBrains Mono';">
+        ${scopeLabel(t)} · ${t.permissions?.write ? 'Modifier' : ''}${t.permissions?.delete ? ' + Supprimer' : ''} · ${new Date(t.createdAt).toLocaleDateString('fr-FR')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleNewTokenForm(){
+  const form = document.getElementById('newTokenForm');
+  const showing = form.style.display !== 'none';
+  form.style.display = showing ? 'none' : 'block';
+  document.getElementById('newTokenResult').style.display = 'none';
+  if(!showing){
+    const appSel = document.getElementById('tkAppId');
+    appSel.innerHTML = PUBLISHED.map(a => `<option value="${a.id}">${a.name}</option>`).join('') || '<option value="">Aucune app publiée</option>';
+    onTokenScopeChange();
+  }
+}
+
+function onTokenScopeChange(){
+  const scope = document.getElementById('tkScope').value;
+  document.getElementById('tkAppRow').style.display = scope === 'single_app' ? 'block' : 'none';
+}
+
+async function createToken(){
+  const err = document.getElementById('tkErr');
+  err.textContent = '';
+  const label = document.getElementById('tkLabel').value.trim();
+  const scope = document.getElementById('tkScope').value;
+  const appId = document.getElementById('tkAppId').value;
+  const permWrite = document.getElementById('tkPermWrite').checked;
+  const permDelete = document.getElementById('tkPermDelete').checked;
+
+  if(!label){ err.textContent = 'Donne un nom à ce jeton (pour le reconnaître plus tard).'; return; }
+  if(scope === 'single_app' && !appId){ err.textContent = "Publie au moins une app avant de créer un jeton limité à une app."; return; }
+
+  try{
+    const res = await fetch(`${WORKER_URL}/tokens/create`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        master_token: ADMIN_TOKEN, label, scope,
+        appId: scope === 'single_app' ? appId : undefined,
+        permissions: { write: permWrite, delete: permDelete }
+      })
+    });
+    const data = await res.json();
+    if(!res.ok){ err.textContent = data.error || 'Échec de la création du jeton.'; return; }
+
+    lastCreatedToken = data.token;
+    document.getElementById('newTokenValue').textContent = data.token.token;
+    document.getElementById('newTokenResult').style.display = 'block';
+    document.getElementById('newTokenForm').style.display = 'none';
+    document.getElementById('tkLabel').value = '';
+    await loadTokens();
+  }catch(e){
+    err.textContent = 'Impossible de contacter le Worker.';
+  }
+}
+
+function copyNewTokenValue(){
+  if(!lastCreatedToken) return;
+  copyToClipboard(lastCreatedToken.token).then(ok =>
+    showAdminToast(ok ? 'Jeton copié.' : "Impossible de copier automatiquement. Maintiens le doigt sur le texte ci-dessus pour copier.", !ok)
+  );
+}
+
+function copyNewTokenLink(){
+  if(!lastCreatedToken) return;
+  const app = lastCreatedToken.scope === 'single_app' ? PUBLISHED.find(a => String(a.id) === String(lastCreatedToken.appId)) : null;
+  const instructions = buildAgentInstructions(lastCreatedToken.token, lastCreatedToken.scope, lastCreatedToken.appId, app ? app.name : null, lastCreatedToken.permissions);
+  copyToClipboard(instructions).then(ok =>
+    showAdminToast(ok ? 'Instructions API copiées.' : "Impossible de copier automatiquement. Maintiens le doigt sur le texte ci-dessus pour copier.", !ok)
+  );
+}
+
+// Confirmation par compte à rebours (3, 2, 1, Confirmer) au lieu du popup natif du navigateur.
+function startRevokeCountdown(token, ev){
+  if(ev) ev.stopPropagation();
+  const btn = ev.target;
+  if(btn.dataset.confirming === '1') return;
+  btn.dataset.confirming = '1';
+  btn.onclick = null;
+  let n = 3;
+  btn.textContent = String(n);
+  const timer = setInterval(() => {
+    n--;
+    if(n > 0){
+      btn.textContent = String(n);
+    } else {
+      clearInterval(timer);
+      btn.textContent = 'Confirmer ?';
+      btn.onclick = (e2) => { e2.stopPropagation(); revokeToken(token); };
+      setTimeout(() => {
+        if(btn.textContent === 'Confirmer ?'){
+          btn.textContent = 'Révoquer';
+          btn.onclick = (e2) => startRevokeCountdown(token, e2);
+          delete btn.dataset.confirming;
+        }
+      }, 5000);
+    }
+  }, 1000);
+}
+
+async function revokeToken(token, ev){
+  if(ev) ev.stopPropagation();
+  try{
+    const res = await fetch(`${WORKER_URL}/tokens/revoke`, {
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ master_token: ADMIN_TOKEN, token })
+    });
+    if(!res.ok){ showAdminToast('Échec de la révocation.', true); return; }
+    showAdminToast('Jeton révoqué.', false);
+    await loadTokens();
+  }catch(e){
+    showAdminToast('Impossible de contacter le Worker.', true);
+  }
+}
+
+const SPLASH_START = Date.now();
+const SPLASH_MIN_MS = 1500; // laisse le temps à l'animation du logo de se jouer
+function setSplashProgress(pct){
+  const bar = document.getElementById('splashBarFill');
+  if(bar) bar.style.width = pct + '%';
+}
+function hideSplash(){
+  const splash = document.getElementById('splashScreen');
+  if(!splash) return;
+  const wait = Math.max(0, SPLASH_MIN_MS - (Date.now() - SPLASH_START));
+  setTimeout(()=>{
+    splash.classList.add('fade-out');
+    setTimeout(()=> splash.classList.add('hidden'), 450);
+  }, wait);
+}
+
+async function loadTokensQuiet(){
+  if(!ADMIN_TOKEN) return;
+  try{
+    const res = await fetch(`${WORKER_URL}/tokens/list?master_token=${encodeURIComponent(ADMIN_TOKEN)}`);
+    if(!res.ok) return;
+    const data = await res.json();
+    TOKENS = data.tokens || [];
+  }catch(e){}
+}
+
+// Le contenu doit rester accessible même si le Worker réseau répond lentement.
+setTimeout(() => hideSplash(), 2200);
+
+(async function initControl(){
+  setSplashProgress(30);
+  await loadPublished();
+  await loadTokensQuiet();
+  setSplashProgress(100);
+  hideSplash();
+
+  // Lien privé ouvert avec ?edit=<id> : pré-charge directement le formulaire en mode modification.
+  try{
+    const editId = new URLSearchParams(location.search).get('edit');
+    if(editId){
+      const target = PUBLISHED.find(a => String(a.id) === String(editId));
+      if(target) editApp(target.id);
+    }
+  }catch(e){}
+})();
+</script>
+
+<script>
+function openAppPicker(){
+  const modal=document.getElementById('appPickerModal');
+  const list=document.getElementById('appPickerList');
+  if(!modal||!list)return;
+  if(!PUBLISHED||!PUBLISHED.length){list.innerHTML='<div class="picker-empty">Aucune application publiée dans le catalogue.</div>';}
+  else{list.innerHTML=PUBLISHED.map(a=>{const icon=a.icon&&a.icon.startsWith('data:image')?'<img src="'+a.icon+'" alt="">':(a.icon||'A');return '<button type="button" class="app-picker-option '+(String(document.getElementById('tkAppId').value)===String(a.id)?'selected':'')+'" onclick="selectAppForToken('+a.id+')"><span class="app-icon">'+icon+'</span><span class="app-info"><strong>'+escapePickerText(a.name||'Application')+'</strong><small>'+escapePickerText((a.dev||'Développeur')+' · v'+(a.version||'1.0.0'))+'</small></span><span class="radio"></span></button>'}).join('');}
+  modal.classList.add('show');modal.setAttribute('aria-hidden','false');
+}
+function closeAppPicker(){const m=document.getElementById('appPickerModal');if(m){m.classList.remove('show');m.setAttribute('aria-hidden','true')}}
+function escapePickerText(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function selectAppForToken(id){const select=document.getElementById('tkAppId');const app=(PUBLISHED||[]).find(a=>String(a.id)===String(id));if(!select||!app)return;select.value=String(id);const icon=document.querySelector('#appPickerTrigger .picker-icon');icon.innerHTML=app.icon&&app.icon.startsWith('data:image')?'<img src="'+app.icon+'" alt="">':'▦';document.getElementById('appPickerName').textContent=app.name||'Application';document.getElementById('appPickerMeta').textContent=(app.dev||'Développeur')+' · v'+(app.version||'1.0.0');closeAppPicker()}
+const originalTokenScopeChange=window.onTokenScopeChange;
+window.onTokenScopeChange=function(){if(typeof originalTokenScopeChange==='function')originalTokenScopeChange();const row=document.getElementById('tkAppRow');const scope=document.getElementById('tkScope');if(row&&scope)row.style.display=scope.value==='single_app'?'block':'none';if(scope&&scope.value==='single_app'&&window.PUBLISHED&&PUBLISHED.length&&!document.getElementById('tkAppId').value)selectAppForToken(PUBLISHED[0].id)};
+document.addEventListener('click',e=>{const m=document.getElementById('appPickerModal');if(m&&e.target===m)closeAppPicker()});
+</script>
+<div id="confirmDeleteModal" class="confirm-modal" aria-hidden="true"><div class="confirm-card"><div class="confirm-icon">⌫</div><h2>Retirer cette application ?</h2><p>Cette action va retirer <strong id="confirmDeleteName">cette application</strong> du catalogue partagé. La fiche ne sera plus visible par les utilisateurs.</p><div class="confirm-actions"><button type="button" class="confirm-cancel" onclick="closeDeleteConfirm()">Annuler</button><button type="button" class="confirm-delete" id="confirmDeleteButton" onclick="confirmDeleteApp()">Supprimer définitivement</button></div></div></div><script>
+const categoryIcons={"Outils":"▣","Jeux":"◇","Productivité":"✓","Réseaux sociaux":"◎","Divertissement":"▶","Actualités":"▤","Éducation":"✦","Finance":"◈","Photo & vidéo":"▧"};
+function openCategoryPicker(){const m=document.getElementById('categoryModal'),list=document.getElementById('categoryList'),select=document.getElementById('fCat');list.innerHTML=[...select.options].map(o=>'<button type="button" class="category-option '+(o.value===select.value?'selected':'')+'" data-category="'+escapePickerText(o.value)+'"><span class="category-option-icon">'+(categoryIcons[o.value]||'•')+'</span><strong>'+escapePickerText(o.value)+'</strong></button>').join('');list.querySelectorAll('.category-option').forEach(b=>b.addEventListener('click',()=>selectCategory(b.dataset.category)));m.classList.add('show');m.setAttribute('aria-hidden','false')}
+function closeCategoryPicker(){const m=document.getElementById('categoryModal');m.classList.remove('show');m.setAttribute('aria-hidden','true')}
+function selectCategory(value){document.getElementById('fCat').value=value;document.getElementById('categoryName').textContent=value;document.getElementById('categoryIcon').textContent=categoryIcons[value]||'•';closeCategoryPicker()}
+let pendingDeleteId=null;
+function startRemoveCountdown(id,ev){if(ev)ev.stopPropagation();pendingDeleteId=id;const app=(window.PUBLISHED||[]).find(a=>String(a.id)===String(id));document.getElementById('confirmDeleteName').textContent=app?'« '+(app.name||'Application')+' »':'cette application';const m=document.getElementById('confirmDeleteModal');m.classList.add('show');m.setAttribute('aria-hidden','false')}
+function closeDeleteConfirm(){pendingDeleteId=null;const m=document.getElementById('confirmDeleteModal');m.classList.remove('show');m.setAttribute('aria-hidden','true')}
+async function confirmDeleteApp(){if(pendingDeleteId===null)return;const id=pendingDeleteId;const btn=document.getElementById('confirmDeleteButton');btn.disabled=true;btn.textContent='Suppression en cours…';try{await removeApp(id);closeDeleteConfirm()}finally{btn.disabled=false;btn.textContent='Supprimer définitivement'}}
+function renderList(){const title=document.getElementById('listTitle'),el=document.getElementById('publishList');title.textContent='Applications publiées ('+(PUBLISHED||[]).length+')';if(!PUBLISHED||!PUBLISHED.length){el.innerHTML='<div class="empty">Aucune application publiée pour l’instant.</div>';return}el.innerHTML=PUBLISHED.map(a=>{const icon=a.icon&&a.icon.startsWith('data:image')?'<img src="'+a.icon+'" alt="">':'<span style="font-size:22px">'+(a.icon||'▣')+'</span>';return '<div class="row"><div class="name">'+icon+'<span>'+escapePickerText(a.name||'Application')+' <small style="display:block;color:var(--muted);font-size:11px;font-weight:500">'+escapePickerText((a.cat||'Outils')+' · v'+(a.version||'1.0.0'))+'</small></span></div><div style="display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end"><span class="edit" onclick="editApp('+a.id+')">✎ Modifier</span><span class="rm" onclick="startRemoveCountdown('+a.id+',event)">⌫ Retirer</span></div></div>'}).join('')}
+setTimeout(()=>{if(window.PUBLISHED)renderList()},0);
+document.addEventListener('click',e=>{if(e.target===document.getElementById('categoryModal'))closeCategoryPicker();if(e.target===document.getElementById('confirmDeleteModal'))closeDeleteConfirm()});
+</script>
+</body>
+</html>
