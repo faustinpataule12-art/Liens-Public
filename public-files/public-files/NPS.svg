@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300" viewBox="0 0 600 300">
+  <!-- Ombre -->
+  <ellipse cx="300" cy="270" rx="180" ry="15" fill="#000" opacity="0.1"/>
+  
+  <!-- Carrosserie basse -->
+  <path d="M 80 190 L 80 150 Q 80 130 100 130 L 180 130 L 230 90 Q 245 75 270 75 L 410 75 Q 435 75 450 90 L 500 130 L 520 130 Q 540 130 540 150 L 540 190 Z" 
+        fill="#2563EB" stroke="#1E40AF" stroke-width="4" stroke-linejoin="round"/>
+  
+  <!-- Toit / Vitres -->
+  <path d="M 235 125 L 275 85 L 405 85 L 470 125 Z" fill="#93C5FD" stroke="#1E40AF" stroke-width="4" stroke-linejoin="round"/>
+  <line x1="340" y1="85" x2="340" y2="125" stroke="#1E40AF" stroke-width="4"/>
+  
+  <!-- Phare -->
+  <path d="M 525 150 L 540 150 L 540 170 L 525 170 Z" fill="#FEF08A" stroke="#1E40AF" stroke-width="4"/>
+  
+  <!-- Poignée -->
+  <rect x="380" y="140" width="25" height="6" rx="3" fill="#1E40AF"/>
+
+  <!-- Roues -->
+  <g>
+    <circle cx="180" cy="200" r="35" fill="#111827" stroke="#1E40AF" stroke-width="4"/>
+    <circle cx="180" cy="200" r="15" fill="#E5E7EB" stroke="#1E40AF" stroke-width="3"/>
+  </g>
+  <g>
+    <circle cx="440" cy="200" r="35" fill="#111827" stroke="#1E40AF" stroke-width="4"/>
+    <circle cx="440" cy="200" r="15" fill="#E5E7EB" stroke="#1E40AF" stroke-width="3"/>
+  </g>
+</svg>
