@@ -1,0 +1,58 @@
+Crée la PARTIE 2 de cette histoire à partir de la photo jointe.
+
+Je veux une vidéo verticale réaliste de 15 secondes au format 9:16, avec les mêmes personnages, les mêmes vêtements et la même ambiance que sur la photo. La scène doit ressembler à une vraie vidéo tournée par des humains, pas à une animation artificielle. Les mouvements doivent être naturels : marche lente, respiration, regards, gestes crédibles, expressions réalistes et déplacements cohérents.
+
+La scène se déroule devant une vieille maison abandonnée, isolée sur un chemin poussiéreux. Il fait jour, mais l’ambiance est inquiétante. La femme arrive devant la maison avec le zombie derrière elle. Le zombie est effrayant mais sans gore : peau pâle et sale, vêtements déchirés, sourire inquiétant.
+
+DÉROULEMENT EXACT :
+
+0 à 3 secondes :
+La femme arrive devant la maison abandonnée en marchant lentement. Le zombie la suit derrière elle. La porte de la maison bouge légèrement avec le vent. La femme regarde la maison avec inquiétude.
+
+La femme dit clairement en français :
+« Pourquoi tu m’as amenée ici ? »
+
+3 à 6 secondes :
+Le zombie s’approche lentement de la porte et pose sa main dessus. La porte s’ouvre progressivement toute seule avec un grincement réaliste. La femme recule légèrement et serre son sac.
+
+Le zombie répond calmement :
+« Parce que quelqu’un t’attend à l’intérieur. »
+
+6 à 10 secondes :
+Un bruit sourd vient de l’intérieur de la maison. La femme regarde le zombie avec peur.
+
+La femme dit :
+« Mais… tu avais dit que tu voulais m’accompagner. »
+
+Le zombie tourne lentement la tête vers elle et répond avec un sourire inquiétant :
+« Je ne t’ai jamais dit que je voulais te protéger. »
+
+10 à 13 secondes :
+Une silhouette apparaît rapidement derrière une fenêtre cassée. La femme sursaute et recule d’un pas.
+
+La femme crie doucement :
+« Oh Seigneur… il y a quelqu’un ! »
+
+Le zombie reste immobile et sourit.
+
+13 à 15 secondes :
+Le zombie pousse doucement la femme vers l’entrée de la maison, sans violence excessive. Il se tourne ensuite vers la caméra avec un sourire inquiétant.
+
+Il murmure :
+« Entre… elle t’attend depuis longtemps. »
+
+La porte claque brusquement. Termine sur un écran noir pendant un très court instant avec une ambiance inquiétante.
+
+IMPORTANT :
+- Conserver l’identité, les vêtements et l’apparence des personnages de la photo jointe.
+- La femme doit avoir une peur naturelle et crédible.
+- Le zombie doit parler lentement et calmement, avec une voix inquiétante.
+- Synchroniser correctement les lèvres avec les dialogues français.
+- Ajouter les bruits de pas, le vent, les buissons, le grincement de la porte, le bruit sourd venant de la maison et le claquement final de la porte.
+- Ne pas ajouter de musique de fond.
+- Ne pas ajouter de nouveaux personnages visibles, sauf la silhouette rapide derrière la fenêtre.
+- Pas de sang, pas de gore, pas de déformation des visages.
+- Pas de mouvements rapides irréalistes.
+- Pas de texte ni de sous-titres à l’écran.
+- La vidéo doit commencer naturellement avec l’arrivée devant la maison et se terminer clairement avec la porte qui claque.
+- Génère directement la vidéo finale en format vertical 9:16, durée 15 secondes.
