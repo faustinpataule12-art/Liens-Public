@@ -1,0 +1,130 @@
+DEUX SEGMENTS RESTANTS — TIKTOK « 3 SITES CACHÉS POUR CODER PLUS VITE »
+
+À transmettre à l’autre Manus pour continuer la vidéo après le segment 1 déjà généré.
+
+RÉFÉRENCE À UTILISER :
+Image du créateur face caméra : /home/ubuntu/createur_tech_face_camera.png
+
+IMPORTANT : utiliser cette image comme référence d’identité pour conserver exactement le même créateur, le même visage, la même coiffure, le même tee-shirt noir, la même surchemise sombre et le même studio.
+
+STYLE COMMUN :
+- Vidéo TikTok verticale 9:16.
+- Rendu réaliste et dynamique.
+- Créateur tech français, ton énergique mais crédible.
+- Même voix du créateur dans les deux segments.
+- Synchronisation labiale réaliste lorsqu’il est face caméra.
+- Interfaces de sites lisibles et réalistes.
+- Aucun filigrane.
+- Pas de musique de fond.
+- Ajouter seulement des transitions whoosh, un son de validation et un petit jingle final.
+- Les textes à l’écran doivent être grands, lisibles, en blanc et jaune.
+- Ne pas mettre de sous-titres complets : uniquement les textes graphiques demandés.
+
+============================================================
+SEGMENT 2 — FIN DE REGEX101 ET CARBON
+============================================================
+
+Durée : 15 secondes.
+Ce segment correspond aux secondes 15 à 30 de la vidéo complète.
+
+CONTINUITÉ DE DÉPART :
+Commencer exactement avec la fin du segment 1 : l’interface regex101.com est visible, une expression régulière est saisie dans l’éditeur, le curseur est présent et la zone de test est prête à afficher les résultats.
+
+0 à 7 secondes du segment 2 — Regex101.com
+
+Montrer une capture d’écran dynamique et réaliste de regex101.com.
+Terminer la saisie de l’expression régulière en direct.
+Afficher une chaîne de test avec plusieurs correspondances mises en évidence.
+Faire un zoom léger sur la zone de test.
+Le curseur clique dans l’éditeur puis dans la zone des résultats.
+
+Ajouter un effet sonore court de validation lorsque les correspondances apparaissent.
+
+VOIX OFF DU CRÉATEUR, EN FRANÇAIS :
+« sans s’arracher les cheveux. »
+
+La phrase doit être claire et courte, sans chevauchement avec le son de validation.
+
+7 à 15 secondes du segment 2 — Carbon.now.sh
+
+Faire une transition fluide depuis regex101.com vers une interface réaliste de Carbon, anciennement carbon.now.sh.
+Montrer un court code HTML/JavaScript dans l’éditeur.
+Le code apparaît ou est collé progressivement.
+Le code se transforme visuellement en une belle image propre et stylée, prête à être publiée sur les réseaux sociaux.
+Faire un zoom vers le bouton de partage.
+Le curseur se déplace vers ce bouton sans cliquer trop rapidement.
+
+TEXTE À L’ÉCRAN :
+« CODE → VISUEL »
+
+VOIX OFF DU CRÉATEUR, EN FRANÇAIS :
+« Et enfin, Carbon.now.sh pour transformer ton code moche en visuel ultra stylé pour tes réseaux. »
+
+Terminer le segment avec l’aperçu Carbon visible et le bouton de partage à l’écran.
+Le dernier plan doit permettre au segment 3 de commencer naturellement avec ce même aperçu.
+
+============================================================
+SEGMENT 3 — CONCLUSION FACE CAMÉRA
+============================================================
+
+Durée : 10 secondes.
+Ce segment correspond aux secondes 30 à 40 de la vidéo complète.
+
+CONTINUITÉ DE DÉPART :
+Commencer avec l’aperçu de code stylé dans Carbon et le bouton de partage encore visible pendant environ 2 secondes.
+
+0 à 2 secondes du segment 3 — Carbon
+
+Terminer l’aperçu Carbon.
+Faire un zoom doux et rapide vers le bouton de partage.
+Le curseur se place sur le bouton.
+Ajouter un petit effet sonore de clic ou de partage.
+
+2 à 10 secondes du segment 3 — Retour face caméra
+
+Couper vers exactement le même créateur que dans le segment 1.
+Utiliser la même image de référence :
+/home/ubuntu/createur_tech_face_camera.png
+
+Le créateur est dans le même studio, avec le même visage, la même coiffure, le même tee-shirt noir et la même surchemise sombre.
+Il regarde directement la caméra.
+Il pointe clairement vers le bas, en direction des commentaires.
+Il sourit avec un air complice et sympathique.
+La caméra peut effectuer un léger zoom avant final.
+
+TEXTE À L’ÉCRAN, GRAND ET CLIGNOTANT :
+« COMMENTE TON PRÉFÉRÉ »
+
+VOIX DU CRÉATEUR, EN FRANÇAIS :
+« Dis-moi en commentaire lequel tu connaissais déjà et envoie ça à ton collègue qui galère toujours avec son code. »
+
+La phrase doit être prononcée naturellement, avec une synchronisation labiale claire.
+
+FIN :
+Maintenir le sourire du créateur pendant la dernière demi-seconde.
+Ajouter un petit jingle de fin propre et court.
+Pas de musique de fond.
+
+============================================================
+RÉCAPITULATIF DES SEGMENTS À PRODUIRE
+============================================================
+
+SEGMENT 2 : 15 secondes — fin de regex101.com puis Carbon.now.sh.
+SEGMENT 3 : 10 secondes — fin de Carbon puis conclusion face caméra.
+
+Une fois les deux segments générés, les assembler dans cet ordre :
+1. tiktok_sites_code_segment_1.mp4
+2. segment 2 — regex101 + Carbon
+3. segment 3 — conclusion face caméra
+
+Durée totale visée : environ 40 secondes.
+
+Vérifications finales demandées :
+- Format vertical 9:16.
+- Même identité du créateur dans tous les plans face caméra.
+- Dialogues français clairs.
+- Audio sans chevauchement.
+- Interfaces DevDocs.io, regex101.com et Carbon lisibles.
+- Texte « CODE → VISUEL » correctement visible.
+- Texte « COMMENTE TON PRÉFÉRÉ » correctement visible.
+- Jingle uniquement à la fin.
