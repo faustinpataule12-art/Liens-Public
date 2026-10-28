@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fable Fast · Vidéos en parties</title>
+<style>
+:root{--bg:#0f1116;--card:#1b1c22;--line:#2a2b33;--mut:#9a9aa6;--lil:#c9a0f5;--grad:linear-gradient(90deg,#e86bb0,#5b8cf0,#a77bf0)}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg);color:#fff;font-family:system-ui,sans-serif}
+button{font-family:inherit;cursor:pointer}
+svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.app{max-width:480px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;
+  background:linear-gradient(to bottom,rgba(15,17,22,0) 130px,var(--bg) 360px),linear-gradient(115deg,#5560b8,#6a3fa0 55%,#a35cbf)}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 12px}
+header h2{font-size:26px}
+.ico{width:42px;height:42px;background:none;border:none;color:#fff;display:flex;align-items:center;justify-content:center}
+.ico svg{width:26px;height:26px}
+.s{display:none;flex:1;flex-direction:column;padding:0 20px 40px;animation:in .35s}
+.s.on{display:flex}
+@keyframes in{from{opacity:0;transform:translateY(10px)}}
+h1{font-size:27px;line-height:1.2;margin-bottom:10px}
+.sub{color:#c5bfd8;font-size:15.5px;line-height:1.45}
+.c{text-align:center}
+.hint{color:var(--mut);font-size:13px;text-align:center;margin-top:18px;line-height:1.4}
+.go{width:100%;margin-top:16px;padding:18px;font-size:18px;font-weight:700;color:#fff;border:2px solid transparent;border-radius:34px;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,var(--grad) border-box}
+.go:disabled{opacity:.4}
+.lien{background:none;border:none;color:var(--mut);text-decoration:underline;margin-top:14px;font-size:15px;align-self:center}
+.foot{margin:24px 0 0;padding:20px 0 0;display:flex;flex-direction:column}
+.foot .go{margin-top:0}.foot .go+.go,.foot .go+.lien{margin-top:12px}
+/* accueil : univers */
+.big{width:64px;height:64px;margin:20px auto 16px;border-radius:16px;background:#23242b;display:flex;align-items:center;justify-content:center;color:#cfc4ee;padding:16px}
+.big svg{width:100%;height:100%}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}
+.card{display:flex;flex-direction:column;gap:7px;text-align:left;color:#fff;padding:14px;border-radius:18px;background:var(--card);border:1.5px solid var(--line)}
+.card.on{border-color:transparent;background:linear-gradient(var(--card),var(--card)) padding-box,var(--grad) border-box}
+.card b{font-size:16px;line-height:1.25}.card small{font-size:12.5px;color:var(--mut);line-height:1.35}
+.cat{align-items:flex-start}.cat .ci{width:38px;height:38px;border-radius:12px;background:#262733;display:flex;align-items:center;justify-content:center;color:var(--lil);padding:9px}
+.cat .ci svg{width:100%;height:100%}
+.tag{font-size:12px;font-weight:700;color:var(--lil);text-transform:uppercase;letter-spacing:.4px}
+.rec{align-self:flex-start;color:#fff;background:var(--grad);border-radius:8px;padding:2px 8px;font-size:11px;font-weight:700;font-style:normal}
+.opt{display:flex;align-items:center;gap:14px;width:100%;padding:17px 16px;margin-top:12px;border-radius:16px;background:var(--card);border:1px solid var(--line);color:#fff;font-size:16px;font-weight:600;text-align:left}
+.opt svg.ch{width:20px;height:20px;margin-left:auto;color:var(--mut)}
+.opt small{display:block;font-weight:400;color:var(--mut);font-size:13px;margin-top:3px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 6px}
+.chip{padding:14px 20px;border-radius:30px;background:var(--card);border:1.5px solid var(--line);color:#fff;font-size:17px;font-weight:600;position:relative}
+.chip.on{border-color:#a77bf0;background:#2a2140}
+.chip em{display:block;font-size:10.5px;font-style:normal;color:var(--lil);font-weight:700;margin-top:2px}
+input.num::-webkit-outer-spin-button,input.num::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.seg{display:flex;gap:8px;margin-top:12px}
+.seg button{flex:1;padding:14px;border-radius:16px;background:var(--card);border:1.5px solid var(--line);color:#fff;font-size:16px;font-weight:600;font-family:inherit}
+.seg button.on{border-color:#a77bf0;background:#2a2140}
+input.num{width:100%;margin-top:14px;padding:16px;font-size:18px;color:#fff;background:#1d1e24;border:2px solid #b9a2f5;border-radius:18px;outline:none;font-family:inherit}
+/* chargement : carte + lignes animées + 3 étapes */
+.lcard{margin:40px 0 20px;padding:18px;border-radius:24px;background:#16171c;border:1px solid var(--line);overflow:hidden}
+.q{display:flex;flex-direction:column;gap:10px;position:relative;margin-bottom:12px}
+.q b{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:16px;background:#171926;border:1px solid #ffffff12;opacity:0;animation:bi 6s ease infinite;animation-delay:calc(var(--i)*.5s)}
+.q b:before{content:'';width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#e56fd0,#4cc3ff);flex:none}
+.q b:after{content:'';flex:1;height:19px;background:linear-gradient(#ffffff2e,#ffffff2e) 0 0/100% 6px no-repeat,linear-gradient(#ffffff1f,#ffffff1f) 0 13px/60% 6px no-repeat}
+.q b span{width:9px;height:9px;border-radius:50%;background:#34d399;flex:none}
+.q b:nth-child(2) span{background:#fbbf24}.q b:nth-child(4) span{background:#fb7185}
+.q i{position:absolute;left:-6px;right:-6px;height:46px;border-radius:16px;border:1.5px solid #a78bfa;box-shadow:0 0 22px rgba(167,139,250,.55);animation:sc 3s ease-in-out infinite alternate}
+@keyframes bi{0%{opacity:0;transform:translateY(14px)}12%,80%{opacity:1;transform:none}92%,100%{opacity:0}}
+@keyframes sc{from{top:0}to{top:calc(100% - 46px)}}
+@media (prefers-reduced-motion:reduce){.q b,.q i{animation-duration:14s}}
+#lt{font-size:17px;font-weight:700;text-align:center;margin:6px 0 20px;transition:opacity .3s}
+.stp{position:relative;display:flex;justify-content:space-between;padding:0 6%}
+.trk{position:absolute;top:10px;left:14%;right:14%;height:3px;background:var(--line)}
+.trk i{display:block;height:100%;width:0;background:#1fb77a;transition:width .6s}
+.n{position:relative;text-align:center;font-size:11px;color:var(--mut);width:70px}
+.n b{display:block;width:22px;height:22px;margin:0 auto 6px;border-radius:50%;background:#0f1116;border:2px solid #fff;color:#fff;line-height:18px}
+.n.act{color:#fff}.n.act b{border-color:#e86bb0;background:#e86bb0;animation:pl 1s infinite alternate}
+.n.ok{color:#fff}.n.ok b{background:#1fb77a;border-color:#1fb77a}
+@keyframes pl{to{transform:scale(1.2)}}
+/* plan */
+.prog{height:6px;background:#2d2e36;border-radius:3px;margin:12px 0 18px}.prog i{display:block;height:100%;background:var(--grad);border-radius:3px;transition:width .5s}
+.part{display:flex;align-items:center;gap:12px;padding:13px 14px;margin-bottom:10px;border-radius:16px;background:var(--card);border:1px solid var(--line);width:100%;text-align:left;color:#fff}
+.part .no{width:34px;height:34px;border-radius:50%;border:2px solid #3b3c47;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:none}
+.part.done .no{background:#1fb77a;border-color:#1fb77a}.part.done .no svg{width:16px;height:16px;stroke-width:3}
+.part.now{border-color:#a77bf0}.part.now .no{border-color:#e86bb0}
+.part b{font-size:15px;line-height:1.3;display:block}.part small{color:var(--mut);font-size:12.5px}
+/* questions / accroches / script / analyse */
+.dots{display:flex;gap:6px;justify-content:center;margin:8px 0 22px}.dots i{width:26px;height:4px;border-radius:2px;background:#3b3c47}.dots i.on{background:#e86bb0}
+.hook{text-align:left;margin:14px 0 0;padding:16px;font-size:15.5px;line-height:1.4;font-weight:500;color:var(--lil)}
+.hook small{display:block;margin-top:6px;font-size:11.5px;color:var(--mut)}
+.pref{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:16px;background:rgba(0,0,0,.25);border:1px solid var(--line);margin-top:14px;font-size:13.5px;color:#d9d3ec}
+.pref button{background:none;border:none;color:var(--lil);text-decoration:underline;font-size:13.5px}
+.stl{align-items:center;text-align:center}.stl .tag{text-transform:none;font-size:14px}
+.box{margin:14px 0;padding:18px;border-radius:18px;background:#16171c;border:1px solid var(--line);font-size:15px;line-height:1.55;white-space:pre-wrap;outline:none}
+.box[contenteditable=true]{border-color:#a77bf0}
+.tools{display:flex;justify-content:flex-end;gap:10px;margin-top:6px}
+.tools button{background:#1d1e24;border:1px solid var(--line);border-radius:14px;color:#ddd;font-size:13.5px;padding:7px 14px}
+.sec{margin-top:18px;padding:16px;border-radius:18px;background:#16171c;border:1px solid var(--line)}
+.sec h3{font-size:13px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+.sec.ok h3{color:#34d399}.sec.ko h3{color:#fb7185}.sec.re h3{color:#fbbf24}
+.sec li{margin:0 0 8px 18px;font-size:14.5px;line-height:1.45;color:#e6e2f3}
+.msg{padding:14px;border-radius:16px;background:rgba(0,0,0,.25);border:1px solid var(--line);font-size:14px;line-height:1.45;color:#d9d3ec;margin-top:14px}
+.empty{color:var(--mut);text-align:center;margin-top:60px;font-size:15px}
+/* onglets, publication, plan modifiable */
+.tabs{display:flex;gap:8px;margin-top:6px}
+.tabs button{flex:1;padding:10px 6px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:#c5bfd8;font-size:13.5px;font-weight:600}
+.tabs button.on{color:#fff;border-color:#a77bf0;background:#2a2140}
+.hg{margin-top:12px;padding:14px;border-radius:16px;background:#16171c;border:1px solid var(--line)}
+.hg p{font-size:14.5px;line-height:1.45;margin:6px 0}.hg .row{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.hg .row em{font-style:normal;font-size:12.5px;color:var(--lil);background:#262733;border-radius:10px;padding:4px 9px}
+.mini{background:#1d1e24;border:1px solid var(--line);border-radius:12px;color:#ddd;font-size:13px;padding:7px 12px}
+.sc{margin-top:10px;padding:12px 14px;border-radius:14px;background:#16171c;border:1px solid var(--line);font-size:14px;line-height:1.45}
+.sc b{color:var(--lil);font-size:12.5px;display:block;margin-bottom:3px}.sc i{display:block;color:var(--mut);font-style:normal;font-size:12.5px;margin-top:4px}
+.partrow{display:flex;align-items:stretch;gap:8px;margin-bottom:10px}
+.partrow .part{margin:0;flex:1;min-width:0}
+.mut{color:var(--mut)!important;font-weight:500!important}
+.sq{width:46px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:#c5bfd8;display:flex;align-items:center;justify-content:center;flex:none}
+.sq svg{width:19px;height:19px}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:flex-end;justify-content:center;z-index:20}
+.sheet.on{display:flex}
+.sheet>div{width:100%;max-width:480px;background:#15161c;border-radius:26px 26px 0 0;padding:22px 20px 26px;border:1px solid var(--line)}
+.sheet h3{font-size:18px;margin-bottom:12px}
+.sheet .row2{display:flex;gap:10px;margin-top:14px}.sheet .row2 .go{margin-top:0;padding:14px;font-size:16px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);max-width:88%;background:#2a2140;border:1px solid #a77bf0;color:#fff;padding:12px 16px;border-radius:14px;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:30}.toast.on{opacity:1;transform:translate(-50%,0)}
+.sq.spin svg{animation:rot .8s linear infinite}@keyframes rot{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <button class="ico" id="back" aria-label="Retour"><svg viewBox="0 0 24 24" style="stroke-width:3"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <h2>Fable Fast</h2>
+  <button class="ico" id="hbtn" aria-label="Mes séries"><svg viewBox="0 0 24 24" style="stroke-width:2.2"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/></svg></button>
+</header>
+
+<!-- accueil : univers -->
+<section class="s on" id="home">
+  <div class="big"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4M10 8l5 2-5 2z"/></svg></div>
+  <h1 class="c">Vidéos en parties</h1>
+  <p class="sub c">Choisis un univers (ce sont des exemples) ou écris le tien. On prépare ta série partie par partie.</p>
+  <div class="grid" id="cats"></div>
+</section>
+
+<!-- mon univers (écrit par l'utilisateur) -->
+<section class="s" id="own">
+  <h1>Ton univers</h1>
+  <p class="sub">Écris le type de vidéos en parties que tu veux faire. On construit la série à partir de ça.</p>
+  <input class="num" id="owni" type="text" maxlength="80" placeholder="Ex. : histoires de quartier, dessin animé, voyages…">
+  <div class="foot" style="margin-top:auto"><button class="go" id="ownok" disabled>Continuer</button></div>
+</section>
+
+<!-- sous-univers -->
+<section class="s" id="subs">
+  <h1 id="subt"></h1>
+  <p class="sub">Choisis le type de contenu.</p>
+  <div id="sublist"></div>
+</section>
+
+<!-- nombre de parties -->
+<section class="s" id="size">
+  <h1>Combien de parties ?</h1>
+  <p class="sub">Ta série sera découpée en parties. Tu pourras les faire une par une, même sur plusieurs jours.</p>
+  <div class="chips" id="chips"></div>
+  <input class="num" id="custom" type="number" inputmode="numeric" pattern="[0-9]*" min="2" max="60" placeholder="Ton nombre (2 à 60)" style="display:none">
+  <div class="foot" style="margin-top:auto"><button class="go" id="sizeok">Préparer le plan</button></div>
+</section>
+
+<!-- plan : recommandé par l'IA ou personnalisé -->
+<section class="s" id="pmode">
+  <h1>Comment veux-tu ton plan ?</h1>
+  <p class="sub">Le plan est la liste des sujets de chaque partie. Tu pourras le refaire autant de fois que tu veux.</p>
+  <button class="opt" id="pia"><span>L'IA recommande<small>Elle propose un sujet pour chaque partie, d'après ton univers et ton profil.</small></span><em class="rec" style="margin-left:auto">Recommandé</em></button>
+  <button class="opt" id="pperso"><span>Je personnalise<small>Tu écris toi-même le sujet de chaque partie.</small></span><svg class="ch" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</section>
+
+<!-- chargement (3 étapes) -->
+<section class="s" id="load">
+  <div class="lcard">
+    <div class="q"><b style="--i:0"><span></span></b><b style="--i:1"><span></span></b><b style="--i:2"><span></span></b><b style="--i:3"><span></span></b><i></i></div>
+    <p id="lt"></p>
+    <div class="stp"><div class="trk"><i id="fill"></i></div>
+      <div class="n"><b></b><u></u></div><div class="n"><b></b><u></u></div><div class="n"><b></b><u></u></div></div>
+  </div>
+  <div id="err" style="display:none;margin-top:40px"><p class="msg" id="errt"></p><button class="go" id="errR">Réessayer</button><button class="lien" id="errB">Retour</button></div>
+</section>
+<div class="toast" id="toast"></div>
+
+<!-- plan de la série -->
+<section class="s" id="plan">
+  <h1 id="plt"></h1>
+  <p class="sub" id="pls"></p>
+  <div class="prog"><i id="pg"></i></div>
+  <div class="foot" style="margin:0 0 4px;padding:0"><button class="go" id="next"></button></div>
+  <div id="parts"></div>
+  <button class="lien" id="regenplan" style="margin-bottom:10px">Régénérer les sujets à faire</button>
+</section>
+
+<!-- questions rapides -->
+<section class="s" id="ques">
+  <div class="dots" id="dots"></div>
+  <h1 class="c" id="qt"></h1>
+  <p class="sub c">Ça m'aide à te connaître pour adapter tes parties.</p>
+  <div id="qa" style="margin-top:14px"></div>
+</section>
+
+<!-- accroches -->
+<section class="s" id="hooks">
+  <h1 class="c">Choisis ton accroche</h1>
+  <p class="sub c" id="hs"></p>
+  <div id="hl" style="margin-top:6px"></div>
+  <div class="pref" id="prefcard" style="display:none"><span id="preft"></span><button id="prefedit">Modifier</button></div>
+  <div class="foot" style="margin-top:auto"><button class="go" id="againH">Générer de nouvelles accroches</button></div>
+</section>
+
+<!-- style -->
+<section class="s" id="style">
+  <h1 class="c">Choisis ton style</h1>
+  <p class="sub c">Ça donne le rythme de cette partie.</p>
+  <div class="grid" id="stl"></div>
+</section>
+
+<!-- durée -->
+<section class="s" id="dur">
+  <h1 class="c">Quelle durée ?</h1>
+  <p class="sub c">Combien de temps doit durer cette partie.</p>
+  <div id="dl"></div>
+  <div id="dcrow" style="display:none">
+    <input class="num" id="dcustom" type="number" inputmode="numeric" pattern="[0-9]*" min="1" max="600" placeholder="Ex. 90">
+    <div class="seg" id="dunit"><button type="button" data-u="s" class="on">Secondes</button><button type="button" data-u="m">Minutes</button></div>
+    <p class="hint" id="dhint" style="margin-top:12px"></p>
+  </div>
+  <div class="foot" style="margin-top:auto"><button class="go" id="dok" style="display:none" disabled>Continuer</button></div>
+</section>
+
+<!-- qui tourne la vidéo -->
+<section class="s" id="real">
+  <h1 class="c">Qui réalise la vidéo ?</h1>
+  <p class="sub c">Ça nous dit ce qui est réaliste pour toi.</p>
+  <div class="msg" id="realmsg"></div>
+  <div id="rl"></div>
+</section>
+
+<!-- script de la partie -->
+<section class="s" id="script">
+  <h1 class="c" style="font-size:22px" id="sct"></h1>
+  <p class="sub c" id="scs"></p>
+  <div class="tabs" id="tabs"><button data-t="p" class="on">Paroles</button><button data-t="d">Déroulement</button><button data-t="h">Publication</button></div>
+  <div class="tools"><button id="copy">Copier</button><button id="edit">Modifier</button></div>
+  <div class="box" id="sbox"></div>
+  <div id="pub" style="display:none"></div>
+  <div class="foot" style="margin-top:auto"><button class="go" id="ana">Analyser cette partie</button></div>
+</section>
+
+<!-- analyse de la partie -->
+<section class="s" id="anal">
+  <h1 class="c" style="font-size:22px" id="at"></h1>
+  <div class="sec ok"><h3>Points forts</h3><ul id="ok"></ul></div>
+  <div class="sec ko"><h3>Points faibles</h3><ul id="ko"></ul></div>
+  <div class="sec re" id="resec"><h3>Réalisme</h3><ul id="re"></ul></div>
+  <div class="foot" style="margin-top:auto">
+    <button class="go" id="save">Enregistrer au plan</button>
+    <button class="go" id="regen">Régénérer cette partie</button>
+  </div>
+</section>
+
+<!-- fenêtre : écrire / changer un sujet -->
+<div class="sheet" id="sheet"><div>
+  <h3 id="sheett">Sujet de la partie</h3>
+  <input class="num" id="sheeti" type="text" maxlength="90" style="margin-top:0" placeholder="Écris le sujet de cette partie">
+  <div class="row2"><button class="go" id="sheetno">Annuler</button><button class="go" id="sheetok">Valider</button></div>
+</div></div>
+
+<!-- série terminée -->
+<section class="s" id="end">
+  <div class="big"><svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg></div>
+  <h1 class="c">Série terminée</h1>
+  <p class="sub c" id="endt"></p>
+  <div class="foot" style="margin-top:auto"><button class="go" id="seeplan">Voir le plan</button><button class="lien" id="newser">Nouvelle série</button></div>
+</section>
+
+<!-- mes séries -->
+<section class="s" id="mine">
+  <h1 class="c">Mes séries</h1>
+  <p class="sub c">Reprends une série là où tu t'es arrêté.</p>
+  <div id="ml" style="margin-top:16px"></div>
+</section>
+</div>
+
+<script>
+/* ================= 1. CONSTANTES ================= */
+const IC={
+ Séries:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+ Sport:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+ Films:'<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M3 8l3-5h4L7 8M10 8l3-5h4l-3 5M17 8l3-5"/>',
+ Action:'<path d="M13 2L4 14h7l-1 8 9-12h-7z"/>',
+ Astuces:'<path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/>',
+ Drames:'<path d="M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z"/>',
+ Comédie:'<circle cx="12" cy="12" r="9"/><path d="M8 14a4 4 0 0 0 8 0M9 9h.01M15 9h.01"/>'};
+const CH='<svg class="ch" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>';
+const CATS=[['Séries','Plusieurs épisodes liés'],['Sport','Films, matchs, causeries'],['Films','Résumés et scènes'],['Action','Poursuites, cascades'],['Astuces','Conseils utiles'],['Drames','Histoires fortes'],['Comédie','Faire rire']];
+const SUBS={Séries:['Mini-série fiction','Série à suspense','Série documentaire','Série éducative'],Sport:['Film d\'animation de football','Moments de matchs racontés','Causerie sportive','Histoire d\'un joueur'],
+ Films:['Résumés de films','Scènes cultes','Films d\'action','Suites imaginées'],Action:['Poursuites','Combats','Cascades','Survie'],
+ Astuces:['Astuces digitales','Astuces informatiques','Débloquer un problème','Astuces du quotidien'],Drames:['Drame familial','Drame amoureux','Histoire vraie','Drame social'],
+ Comédie:['Sketchs','Quiproquos','Parodies','Humour du quotidien']};
+/* indications données à l'IA selon l'univers */
+const UNIV={Sport:"Univers SPORT = films ou animations de football, moments de matchs racontés, causeries sportives, histoires de joueurs. JAMAIS des cours pour apprendre à jouer.",
+ Astuces:"Univers ASTUCES : chaque partie est un conseil utile et concret, autonome mais lié au thème de la série.",
+ Action:"Univers ACTION : scènes dynamiques (poursuites, combats, cascades, survie) qui se suivent.",
+ Séries:"Univers SÉRIES : une histoire qui se suit de partie en partie.",Films:"Univers FILMS : résumés, scènes, analyses ou suites imaginées.",
+ Drames:"Univers DRAMES : histoires fortes et humaines qui se suivent.",Comédie:"Univers COMÉDIE : situations drôles, rythme vif.",
+ Perso:"Univers écrit librement par le créateur : respecte exactement ce qu'il a écrit."};
+const STYLES=[['Suspense','Je crée une tension et je dévoile la réponse progressivement'],['Valeur express','Je donne un maximum d\'infos utiles sans faire attendre'],['Vécu','Je raconte une histoire vraie avec une leçon'],['Contre-pied','J\'amène une info que les gens n\'ont pas l\'habitude d\'entendre'],['Pas à pas','Je montre comment faire, étape par étape'],['Top / Versus','Je compare ou je note plusieurs choses avec un verdict'],['Rafale','Enchaînement rapide de points courts, juste du punch'],['Libre','Laisse l\'IA choisir la meilleure structure']];
+const STRUCT={
+ 'Suspense':"Après l'accroche, pose une question ou une promesse que tu ne résous PAS tout de suite. Lâche 2 ou 3 indices qui font monter la tension. Garde la réponse pour la fin, puis pose une question aux spectateurs.",
+ 'Valeur express':"Pas d'introduction. Après l'accroche, donne tout de suite 3 faits ou conseils utiles, un par phrase courte, chacun avec son résultat. Termine par un résumé en une phrase.",
+ 'Vécu':"Raconte à la première personne, au passé : situation de départ, ce qui surprend ou tourne mal, ce qui est fait, puis la leçon. Détails concrets, aucun chiffre inventé.",
+ 'Contre-pied':"Après l'accroche, dis ce que tout le monde croit (\"on t'a dit que...\"), puis renverse-le (\"en réalité...\") avec un exemple. Termine en disant quoi faire à la place.",
+ 'Pas à pas':"Après l'accroche, annonce le nombre d'étapes puis donne-les numérotées à l'oral, chacune avec une action simple. Termine par le résultat attendu.",
+ 'Top / Versus':"Après l'accroche, compare deux options ou classe 3 choses. Pour chacune : un point fort, un point faible. Termine par un verdict clair.",
+ 'Rafale':"Après l'accroche, enchaîne 6 à 8 phrases très courtes (5 à 9 mots), une idée chacune, sans transition. Termine par la phrase la plus forte.",
+ 'Libre':"Choisis toi-même la structure qui convient le mieux à cette partie."};
+const REC_STYLE={Astuces:4,Séries:0,Sport:0,Films:5,Action:6,Drames:2,Comédie:3,Perso:7};
+const REC_DUR={'Rafale':30,'Valeur express':45,'Libre':60};
+const QUES=[['Quel est ton objectif principal avec cette série ?',['Gagner des abonnés','Obtenir plus de vues','Trouver des clients']],
+ ['Qui veux-tu toucher ?',['Des débutants','Des passionnés','Tout le monde']],
+ ['Combien de temps peux-tu consacrer à chaque partie ?',['Moins d\'une heure','Quelques heures','Une journée ou plus']]];
+const REAL=[['moi','Je tourne moi-même','Le script est adapté à ce que tu peux filmer seul(e), avec ton téléphone.'],['ia','Par l\'IA','Les scènes sont pensées pour être générées : voix off, images, animations.'],['mix','Les deux','Tu filmes ce que tu peux, l\'IA génère le reste.']];
+const REAL_TXT={moi:"Le créateur filme LUI-MÊME avec son téléphone : uniquement des scènes réalisables seul, sans cascade dangereuse, sans effet coûteux, sans acteurs nombreux.",
+ ia:"La vidéo est GÉNÉRÉE par IA (voix off, images, animations) : scènes pensées pour être générées, pas filmées.",
+ mix:"Mélange : le créateur filme ce qu'il peut, l'IA génère le reste. Indique pour chaque scène si elle est à filmer ou à générer."};
+const HARD_SUBS=['Poursuites','Combats','Cascades','Survie'];
+const STAGES={plan:{l:['Fil rouge','Sujets','Suite'],m:['Écriture du fil rouge de la série','Choix des sujets, un à un','Vérification de la suite logique']},
+ hooks:{l:['Partie','Rappel','Hooks'],m:['Lecture de la partie','Rappel des parties précédentes','Rédaction de tes hooks']},
+ script:{l:['Structure','Rythme','Script'],m:['Construction de la structure','Réglage du rythme','Écriture du script']},
+ ana:{l:['Lecture','Forces','Faiblesses'],m:['Relecture de la partie','Recherche des points forts','Recherche des points faibles']}};
+
+/* ================= 2. MOTEUR IA (le même que le flux Idées : clé de l'utilisateur ou serveur) ================= */
+const A={oai:'',ant:'',gem:'',model:'gemini-3.5-flash-lite',customModel:null};
+try{A.oai=(localStorage.getItem('nps_oai_tok')||'').trim();A.ant=(localStorage.getItem('nps_ant_tok')||'').trim();A.gem=(localStorage.getItem('nps_gem_tok')||'').trim();
+ A.model=localStorage.getItem('nps_model')||A.model;A.customModel=JSON.parse(localStorage.getItem('nps_custom_model')||'null');}catch(e){}
+/* UN SEUL appel IA à la fois : un nouvel appel annule l'ancien (retour arrière, nouvelle étape), jamais deux en parallèle */
+let AIC=null,TRUNC=false;
+function aiAbort(){ if(AIC){try{AIC.abort();}catch(e){}AIC=null;} }
+function httpMsg(c){ return c===429?'Le serveur reçoit trop de demandes (429). Attends quelques secondes puis réessaie.':c===401||c===403?'Clé ou accès refusé ('+c+').':c>=500?'Le serveur a un problème ('+c+'). Réessaie dans un instant.':'Erreur du serveur ('+c+').'; }
+async function ixAsk(sys,prompt,maxTok){
+  if(typeof navigator!=='undefined'&&navigator.onLine===false)throw new Error('Pas de connexion internet. Vérifie ton réseau puis réessaie.');
+  aiAbort();TRUNC=false;
+  const J={'Content-Type':'application/json'},tries=[],sel=String(A.model||'');
+  const cm=(A.customModel&&A.customModel.key)?A.customModel:null;
+  const jt=async r=>{if(!r.ok)throw new Error(httpMsg(r.status));return r.json();};
+  const callCustom=async sig=>{
+    if(cm.provider==='anthropic'){const d=await jt(await fetch(cm.endpoint,{method:'POST',signal:sig,headers:{...J,'x-api-key':cm.key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:cm.model,max_tokens:maxTok,system:sys,messages:[{role:'user',content:prompt}]})}));return (d.content||[]).map(c=>c.text||'').join('');}
+    if(cm.provider==='gemini'){const d=await jt(await fetch(cm.endpoint+cm.model+':generateContent?key='+cm.key,{method:'POST',signal:sig,headers:J,body:JSON.stringify({system_instruction:{parts:[{text:sys}]},generationConfig:{maxOutputTokens:maxTok,responseMimeType:'application/json'},contents:[{role:'user',parts:[{text:prompt}]}]})}));return (d.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');}
+    const d=await jt(await fetch(cm.endpoint,{method:'POST',signal:sig,headers:{...J,'Authorization':'Bearer '+cm.key},body:JSON.stringify({model:cm.model,max_tokens:maxTok,messages:[{role:'system',content:sys},{role:'user',content:prompt}]})}));return d.choices?.[0]?.message?.content||'';};
+  const callGem=async(sig,model)=>{const d=await jt(await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+model+':generateContent?key='+A.gem,{method:'POST',signal:sig,headers:J,body:JSON.stringify({system_instruction:{parts:[{text:sys}]},generationConfig:{maxOutputTokens:maxTok,responseMimeType:'application/json'},contents:[{role:'user',parts:[{text:prompt}]}]})}));TRUNC=(d.candidates?.[0]?.finishReason==='MAX_TOKENS');return (d.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');};
+  const callAnt=async sig=>{const d=await jt(await fetch('https://api.anthropic.com/v1/messages',{method:'POST',signal:sig,headers:{...J,'x-api-key':A.ant,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:sel,max_tokens:maxTok,system:sys,messages:[{role:'user',content:prompt}]})}));return (d.content||[]).map(c=>c.text||'').join('');};
+  const callOai=async sig=>{const model=(sel==='custom-openai'||!sel)?'gpt-4o':sel;const d=await jt(await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',signal:sig,headers:{...J,'Authorization':'Bearer '+A.oai},body:JSON.stringify({model,max_tokens:maxTok,messages:[{role:'system',content:sys},{role:'user',content:prompt}]})}));return d.choices?.[0]?.message?.content||'';};
+  const callProxy=async sig=>{const d=await jt(await fetch('/api/gemini/generate',{method:'POST',signal:sig,headers:J,body:JSON.stringify({model:sel,prompt:prompt,system_instruction:sys})}));return d.text||'';};
+  const add=(id,fn)=>{if(!tries.some(t=>t.id===id))tries.push({id,fn});};
+  if(sel==='custom'&&cm)add('custom',callCustom);
+  else if(A.gem)add('gem',s=>callGem(s,sel));
+  else if(A.ant)add('ant',callAnt);
+  else if(A.oai)add('oai',callOai);
+  else if(cm)add('custom',callCustom);
+  else add('proxy',callProxy);
+  let last=null;
+  for(const t of tries){
+    const ctl=new AbortController();AIC=ctl;const to=setTimeout(()=>ctl.abort(),120000);
+    try{const out=await t.fn(ctl.signal);if(String(out||'').trim())return out;last=new Error('Réponse vide');}
+    catch(e){last=(e&&e.name==='AbortError')?new Error(AIC===ctl?'Délai dépassé : le serveur ne répond pas':'annulé'):e;}
+    finally{clearTimeout(to);if(AIC===ctl)AIC=null;}
+  }
+  const lm=String(last&&last.message||'erreur');
+  throw new Error(/serveur|connexion|Clé|Délai|demandes|vide/i.test(lm)?lm:'L\'IA n\'a pas répondu ('+lm+'). Vérifie ta clé ou ta connexion.');
+}
+const SYS="Tu es Fable Fast, expert des vidéos courtes en plusieurs parties (TikTok, Reels, Shorts). Tu écris en français naturel, simple, parlé. Tu sais construire une série : chaque partie a un sujet distinct, donne envie de voir la suivante et reste cohérente avec les autres. Tu connais ce qui fait circuler une vidéo : accroche qui arrête le pouce dans les 2 à 3 premières secondes, rétention soutenue par le rythme, contenu qu'on a envie de partager, mots-clés et hashtags ciblés. Tu ne promets jamais un nombre de vues et tu n'inventes aucun chiffre. Réponds UNIQUEMENT par un objet JSON valide, sans texte avant ni après, sans balises de code.";
+/* ferme proprement un JSON coupé (réponse trop longue) */
+function repairJ(s){let o='',st=[],inS=false,esc=false;
+  for(const ch of s){o+=ch;if(inS){if(esc)esc=false;else if(ch==='\\')esc=true;else if(ch==='"')inS=false;continue;}
+    if(ch==='"')inS=true;else if(ch==='{'||ch==='[')st.push(ch);else if(ch==='}'||ch===']')st.pop();}
+  if(inS)o+='"';o=o.replace(/[,:]\s*$/,'');while(st.length)o+=(st.pop()==='{'?'}':']');return o;}
+function parseJ(t){t=String(t||'').replace(/```json|```/gi,'');const a=t.indexOf('{');if(a<0)throw new Error('x');
+  const r=t.slice(a),b=r.lastIndexOf('}'),cands=b>=0?[r.slice(0,b+1),r]:[r];
+  for(const c of cands){for(const f of [x=>x,x=>x.replace(/,\s*([}\]])/g,'$1'),repairJ]){try{return JSON.parse(f(c));}catch(e){}}}
+  throw new Error('x');}
+/* un seul appel par étape : si la réponse est illisible, on l'affiche et l'utilisateur relance (aucun second appel caché) */
+async function askJSON(prompt,tok){const t=await ixAsk(SYS,prompt,tok||3000);
+  try{return parseJ(t);}catch(e){throw new Error(TRUNC?'La réponse de l\'IA a été coupée (trop longue). Réessaie, ou choisis une durée plus courte.':'La réponse de l\'IA est illisible. Réessaie.');}}
+const cl=(s,n)=>String(s==null?'':s).trim().slice(0,n);
+/* profil du créateur : rapports déjà faits dans l'app (même navigateur) */
+function mainProf(){try{const m=JSON.parse(localStorage.getItem('ff_main')||'null');if(m&&m.u)return {p:m.p==='instagram'?'instagram':'tiktok',u:String(m.u).replace(/^@+/,'').trim().toLowerCase()};}catch(e){}return null;}
+async function profCtx(){
+  try{
+    const db=await new Promise((ok,ko)=>{const q=indexedDB.open('ff_reports',1);q.onupgradeneeded=()=>{try{q.transaction.abort();}catch(e){}ko();};q.onsuccess=()=>ok(q.result);q.onerror=()=>ko();});
+    const all=await new Promise(ok=>{const q=db.transaction('r').objectStore('r').getAll();q.onsuccess=()=>ok(q.result||[]);q.onerror=()=>ok([]);});
+    const a=all.filter(x=>x.mode==='profile').sort((x,y)=>y.ts-x.ts),mp=mainProf();let x=null;
+    if(mp)x=a.find(z=>{const r=(z.res&&z.res[z.res.length-1])||{};return String(r.pseudo||'').replace(/^@+/,'').toLowerCase()===mp.u;});
+    if(!x)x=a[0];if(!x)return '';
+    const r=(x.res&&x.res[x.res.length-1])||{};
+    return JSON.stringify({pseudo:r.pseudo,plateforme:r.plateforme,niche:r.niche,resume:cl(r.resume,300),hashtags:(r.hashtags||[]).slice(0,10),points_forts:(r.points_forts||[]).slice(0,3),points_faibles:(r.points_faibles||[]).slice(0,4)}).slice(0,1800);
+  }catch(e){return '';}
+}
+let CTX=null;async function getCtx(){if(CTX===null)CTX=await profCtx();return CTX;}
+
+/* ================= 3. ÉTAT ET NAVIGATION ================= */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let cur='home',hist=[],runId=0,timer=null,S={cat:'',sub:'',total:10,ser:null,pi:0,qi:0,hook:'',editPrefs:false,regen:0,custom:false,draft:null,prevH:[],tab:'p'};
+const KEY='ff_series';
+function load_(){try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return [];}}
+function persist(){ if(!S.ser||!S.ser.parts.some(p=>p.title||p.done))return;
+  let l=load_().filter(x=>x.id!==S.ser.id);l.unshift(S.ser);l=l.slice(0,20);let cut=false;
+  for(let k=0;k<20;k++){try{localStorage.setItem(KEY,JSON.stringify(l));if(cut)toast('Espace plein : les plus anciennes séries ont été retirées.');return;}catch(e){if(l.length>1){l.pop();cut=true;}else break;}}
+  toast('Espace de stockage plein : la série n\'a pas pu être enregistrée.'); }
+function go(id,back){ if(!back&&cur!==id&&cur!=='load')hist.push(cur); cur=id; $$('.s').forEach(e=>e.classList.toggle('on',e.id===id)); scrollTo(0,0); sync(); }
+function sync(){ $('#hbtn').style.visibility=cur==='home'?'visible':'hidden'; }
+function leave(){ if(document.referrer&&history.length>1)history.back(); else location.href='./'; }
+$('#back').onclick=()=>{runId++;aiAbort();clearTimeout(timer);hideSheet();if(cur==='home'){leave();return;}if(hist.length)go(hist.pop(),true);else go('home',true);};
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e;};
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),3200);}
+
+/* chargement RÉEL : le travail de l'IA tourne, l'animation suit ; erreur = message + Réessayer */
+function showErr(msg,retry){$('#err').style.display='block';$('.lcard').style.display='none';$('#errt').textContent=msg;$('#errR').onclick=retry;}
+function run(k,work,next){
+  aiAbort();const my=++runId;go('load');$('#err').style.display='none';$('.lcard').style.display='';
+  const T=STAGES[k],ns=$$('.n');let i=0,done=false,manual=false;clearTimeout(timer);
+  const CK='<svg viewBox="0 0 24 24" width="12" height="12" style="stroke:#fff;stroke-width:4;display:block;margin:2px auto"><path d="M5 12l5 5 9-10"/></svg>';
+  /* le travail peut annoncer sa vraie progression (ex. plan écrit par lots de 10 parties) */
+  const report=(txt,frac)=>{ if(my!==runId||done)return;manual=true;clearTimeout(timer);
+    const f=Math.max(0,Math.min(.97,frac||0)),a=Math.min(2,Math.floor(f*3));
+    $('#lt').textContent=txt;$('#fill').style.width=Math.round(f*100)+'%';
+    ns.forEach((n,j)=>{n.className='n'+(j<a?' ok':j===a?' act':'');n.querySelector('b').innerHTML=j<a?CK:'';}); };
+  ns.forEach((n,j)=>{n.className='n';n.querySelector('b').innerHTML='';n.querySelector('u').textContent=T.l[j];});
+  $('#fill').style.width='0';
+  (function tick(){ if(my!==runId||done||manual)return;
+    if(i>0){ns[i-1].className='n ok';ns[i-1].querySelector('b').innerHTML='<svg viewBox="0 0 24 24" width="12" height="12" style="stroke:#fff;stroke-width:4;display:block;margin:2px auto"><path d="M5 12l5 5 9-10"/></svg>';}
+    if(i===3)return;
+    ns[i].className='n act';$('#lt').textContent=T.m[i];$('#fill').style.width=i*50+'%';i++;timer=setTimeout(tick,1800);})();
+  work(report).then(res=>{ if(my!==runId)return;done=true;clearTimeout(timer);
+    ns.forEach(n=>{n.className='n ok';n.querySelector('b').innerHTML='<svg viewBox="0 0 24 24" width="12" height="12" style="stroke:#fff;stroke-width:4;display:block;margin:2px auto"><path d="M5 12l5 5 9-10"/></svg>';});$('#fill').style.width='100%';
+    setTimeout(()=>{if(my===runId)next(res);},450);
+  }).catch(e=>{ if(my!==runId)return;done=true;clearTimeout(timer);showErr(String(e&&e.message||'Une erreur est survenue.'),()=>run(k,work,next)); });
+}
+$('#errB').onclick=()=>{runId++;aiAbort();if(hist.length)go(hist.pop(),true);else go('home',true);};
+
+/* ================= 4. PROMPTS ================= */
+function serHead(){ const s=S.ser||{cat:S.cat,sub:S.sub,total:S.total};
+  return (UNIV[s.cat]||UNIV.Perso)+'\nSérie : « '+s.sub+' » en '+s.total+' parties.'; }
+async function userBlock(){ const c=await getCtx(),a=(S.ser&&S.ser.answers)||[];
+  return (c?'\nProfil du créateur (données réelles) : '+c:'')+(a.length?'\nRéponses du créateur : objectif = '+(a[0]||'?')+' ; public = '+(a[1]||'?')+' ; temps par partie = '+(a[2]||'?'):''); }
+function planList(P,cur,blank){ return P.map((p,i)=>(i+1)+'. '+(((blank&&blank.has(i))||!p.title)?'—':p.title)+(i===cur?'   ← PARTIE EN COURS':'')).join('\n'); }
+function bibleBlock(){ const b=S.ser&&S.ser.bible; return b?'\nFil rouge de la série (à respecter strictement) : '+cl(b,500):''; }
+/* continuité : fil rouge + plan complet + fin des parties précédentes, pour ne jamais sortir du sujet (séries jusqu'à 60 parties) */
+function doneBlock(){ if(!S.ser)return '';
+  const P=S.ser.parts,cur=S.pi;let o=bibleBlock();
+  if(P.some(p=>p.title))o+='\nPlan complet de la série (reste dans ce fil, ne sors jamais de ce sujet) :\n'+planList(P,cur);
+  const dn=P.map((p,i)=>({p,i})).filter(x=>x.p.done&&x.p.script&&x.i!==cur),before=dn.filter(x=>x.i<cur).slice(-3),after=dn.filter(x=>x.i>cur).slice(0,1);
+  const use=before.concat(after);
+  if(use.length)o+='\nParties déjà écrites (continue la suite logique, ne répète rien) :\n'+use.map(x=>'- Partie '+(x.i+1)+' « '+x.p.title+' » : '+cl(x.p.script.p,x===before[before.length-1]&&x.i===cur-1?400:200).replace(/\n+/g,' ')).join('\n');
+  const prev=P[cur-1];
+  if(prev&&prev.done&&prev.script)o+='\nLa partie précédente se termine par : « '+cl(String(prev.script.p).slice(-260),260).replace(/\n+/g,' ')+' » → enchaîne naturellement dessus.';
+  return o; }
+/* écrit les sujets des parties demandées, PAR LOTS de 10, UN appel à la fois : chaque lot voit le fil rouge et tous les sujets déjà écrits */
+async function askTitlesFor(pos,report){
+  const P=S.ser.parts,B=10,ub=await userBlock(),todo=pos.slice(),n0=todo.length;let did=0;
+  while(todo.length){
+    const batch=todo.splice(0,B),blank=new Set(todo.concat(batch)),first=!S.ser.bible,lab=(batch[0]+1)+(batch.length>1?' à '+(batch[batch.length-1]+1):'');
+    if(report)report('Écriture des parties '+lab+' sur '+S.ser.total,did/n0);
+    const p=serHead()+ub+bibleBlock()+'\n\nPlan de la série (— = sujet à écrire) :\n'+planList(P,-1,blank)+
+     '\n\nÉcris les sujets des parties n° '+batch.map(i=>i+1).join(', ')+' (exactement '+batch.length+'). Règles : chaque sujet suit logiquement la partie qui le précède et prépare la suivante ; tous restent dans le thème « '+S.ser.sub+' » sans en sortir ; aucun ne répète un sujet déjà dans le plan ; concret et court (max 60 caractères), sans numéro ; le début donne envie, la partie '+S.ser.total+' conclut la série.'+
+     (first?' Écris aussi "fil_rouge" : 2 phrases qui résument l\'histoire ou la progression de TOUTE la série (repère pour les parties suivantes).':'')+
+     ' Format : {'+(first?'"fil_rouge":"",':'')+'"sujets":[{"n":1,"titre":""}]}';
+    const d=await askJSON(p,Math.min(6000,700+batch.length*90));
+    if(first&&cl(d.fil_rouge,500))S.ser.bible=cl(d.fil_rouge,500);
+    const got={};
+    (d.sujets||[]).forEach((x,k)=>{const t=cl(typeof x==='string'?x:(x&&x.titre)||'',90),n=(x&&x.n!=null&&batch.includes(+x.n-1))?+x.n-1:batch[k];if(t&&n!=null&&batch.includes(n)&&!got[n])got[n]=t;});
+    const miss=batch.filter(i=>!got[i]);
+    if(miss.length)throw new Error('L\'IA a écrit '+(batch.length-miss.length)+' sujets sur '+batch.length+' (parties '+lab+'). Réessaie : les parties déjà écrites sont gardées.');
+    batch.forEach(i=>{P[i].title=got[i];});
+    persist();did+=batch.length;
+  }
+}
+async function askHooks(){
+  const ub=await userBlock(),t=S.ser.parts[S.pi].title,nx=S.ser.parts[S.pi+1];
+  const p=serHead()+ub+doneBlock()+'\n\nPartie '+(S.pi+1)+' sur '+S.ser.total+' : « '+t+' »'+(nx&&nx.title?'\nLa partie suivante sera : « '+nx.title+' »':'')+(S.prevH.length?'\nAccroches déjà proposées (propose-en d\'autres) : '+S.prevH.join(' | '):'')+
+   '\n\nÉcris exactement 3 accroches (la première phrase prononcée à l\'oral pour cette partie), de types différents (preuve, alerte, promesse courte, contre-pied, expérience, diagnostic, révélation, cliffhanger…), max 120 caractères, sans emoji, qui restent dans le sujet de la série. Si ce n\'est pas la partie 1, l\'accroche peut faire le lien avec la partie précédente. Pour chacune : "texte" et "type" (ex. "Type alerte : une erreur courante", max 70 caractères). Format : {"accroches":[{"texte":"","type":""}]}';
+  const d=await askJSON(p,1500),a=(d.accroches||[]).filter(x=>x&&x.texte).slice(0,3);
+  if(a.length<2)throw new Error('L\'IA n\'a pas proposé d\'accroches. Réessaie.');
+  return a.map(x=>[cl(x.texte,160),cl(x.type,90)]);
+}
+async function askScript(again){
+  const ub=await userBlock(),pr=S.ser.prefs,part=S.ser.parts[S.pi],dur=pr.dur,words=Math.round(dur*2.3),sc1=Math.max(4,Math.round(dur/12)),sc2=Math.min(16,Math.max(7,Math.round(dur/8)));
+  const st=STYLES.find(s=>s[0]===pr.style)||STYLES[7],nx=S.ser.parts[S.pi+1];
+  const p=serHead()+ub+doneBlock()+'\n\nPartie '+(S.pi+1)+' sur '+S.ser.total+' : « '+part.title+' »\nAccroche (première phrase, à garder telle quelle) : '+S.hook+
+   '\nStyle : '+st[0]+'\nSTRUCTURE OBLIGATOIRE de ce style : '+(STRUCT[st[0]]||STRUCT['Libre'])+
+   '\nDurée visée : '+fmtDur(dur)+' ('+dur+' secondes, environ '+words+' mots dits).\nRéalisation : '+REAL_TXT[pr.real]+
+   (S.ser.parts.length>1?'\n'+(S.pi===0?'C\'est la première partie : pose le décor et donne envie de voir la suite.':S.pi===S.ser.total-1?'C\'est la dernière partie : conclus la série.':'Cette partie continue la série'+(nx&&nx.title?' et prépare « '+nx.title+' »':'')+' en finissant sur une envie de voir la suivante.')+' Reste STRICTEMENT dans le sujet de la série : ne parle de rien qui sorte du fil rouge et du plan.':'')+
+   (again&&S.draft?'\nÉcris une version DIFFÉRENTE de celle-ci (autre angle, autres phrases) : '+cl(S.draft.p,300).replace(/\n+/g,' '):'')+
+   '\n\nÉcris le script, parlé à la première personne. Réponds avec : "paroles" (le texte exact à dire, phrases courtes, environ '+words+' mots, commence par l\'accroche), "deroulement" ('+sc1+' à '+sc2+' scènes : {"temps":"0-3 s","plan":"ce qu\'on voit et ce qu\'on fait","effet":"mouvement de caméra, coupe, texte à l\'écran ou son"}, les temps couvrent toute la durée de '+dur+' s), "description" (légende prête à publier, max 150 caractères, mentionne la partie et la suite), "hashtags" (10 hashtags pertinents du plus large au plus ciblé, avec #, sans espaces, sans doublon). Format : {"paroles":"","deroulement":[{"temps":"","plan":"","effet":""}],"description":"","hashtags":[""]}';
+  const d=await askJSON(p,Math.min(8000,2200+Math.round(dur*9)));
+  if(!cl(d.paroles,12000))throw new Error('Le script est vide. Réessaie.');
+  const seen={},tags=[].concat(d.hashtags||[]).map(t=>'#'+String(t).replace(/[#\s]/g,'')).filter(t=>t.length>1&&!seen[t.toLowerCase()]&&(seen[t.toLowerCase()]=1)).slice(0,10);
+  const der=(d.deroulement||[]).map(x=>cl(x.temps,20)+' — '+cl(x.plan,300)+(x.effet?'\nEffet : '+cl(x.effet,250):'')).join('\n\n');
+  return {p:cl(d.paroles,12000),d:der||'Aucun déroulement.',h:{desc:cl(d.description,300),groups:[tags.slice(0,5),tags.slice(5,10)].filter(g=>g.length)}};
+}
+async function askAnal(){
+  const ub=await userBlock(),pr=S.ser.prefs,part=S.ser.parts[S.pi],hard=S.cat==='Action'||HARD_SUBS.includes(S.sub);
+  const p=serHead()+ub+doneBlock()+'\n\nPartie '+(S.pi+1)+' sur '+S.ser.total+' : « '+part.title+' » — style '+pr.style+', '+fmtDur(pr.dur)+', réalisation : '+REAL_TXT[pr.real]+'\n\nSCRIPT À ANALYSER :\n'+cl(S.draft.p,8000)+'\n\nDÉROULEMENT :\n'+cl(S.draft.d,3500)+
+   '\n\nAnalyse honnêtement cette partie comme un critique (sans flatter). Donne : "points_forts" (3 points précis, qui citent le script), "points_faibles" (3 points précis avec une correction concrète pour chacun ; signale aussi toute sortie du sujet ou incohérence avec le plan et les parties précédentes), "realisme" (1 à 2 remarques : ce qui est difficile à tourner avec la réalisation indiquée'+(hard?' — univers difficile à filmer, sois exigeant':'')+', et comment l\'adapter). Format : {"points_forts":[""],"points_faibles":[""],"realisme":[""]}';
+  const d=await askJSON(p,2000),f=x=>(Array.isArray(x)?x:[]).map(y=>cl(y,300)).filter(Boolean).slice(0,4);
+  const r={ok:f(d.points_forts),ko:f(d.points_faibles),re:f(d.realisme)};
+  if(!r.ok.length&&!r.ko.length)throw new Error('L\'analyse est vide. Réessaie.');
+  return r;
+}
+function fmtDur(x){x=Math.round(+x||0);return x>=60?Math.floor(x/60)+' min'+(x%60?' '+x%60+' s':''):x+' s';}
+
+/* ================= 5. ÉCRANS ================= */
+CATS.forEach(c=>{const b=el('button','card cat','<span class="ci"><svg viewBox="0 0 24 24">'+IC[c[0]]+'</svg></span><b>'+c[0]+'</b><small>'+c[1]+'</small>');
+  b.onclick=()=>{S.cat=c[0];$('#subt').textContent=c[0];const l=$('#sublist');l.innerHTML='';
+    SUBS[c[0]].forEach(s=>{const o=el('button','opt',esc(s)+CH);o.onclick=()=>{S.sub=s;S.total=10;S.custom=false;buildSize();go('size');};l.appendChild(o);});go('subs');};
+  $('#cats').appendChild(b);});
+(function(){const b=el('button','card cat','<span class="ci"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><b>Mon univers</b><small>Écris le tien</small>');
+  b.onclick=()=>{$('#owni').value='';$('#ownok').disabled=true;go('own');};$('#cats').appendChild(b);})();
+$('#owni').oninput=()=>$('#ownok').disabled=!$('#owni').value.trim();
+$('#ownok').onclick=()=>{S.cat='Perso';S.sub=$('#owni').value.trim();S.total=10;S.custom=false;buildSize();go('size');};
+function buildSize(){const w=$('#chips');w.innerHTML='';
+  [[10,'Recommandé'],[15],[20],['Perso']].forEach(x=>{const b=el('button','chip'+((x[0]===S.total&&!S.custom&&x[0]!=='Perso')?' on':''),String(x[0])+(x[1]?'<em>'+x[1]+'</em>':''));
+    b.onclick=()=>{$$('#chips .chip').forEach(c=>c.classList.remove('on'));b.classList.add('on');
+      if(x[0]==='Perso'){S.custom=true;$('#custom').style.display='block';$('#custom').focus();chk();}else{S.custom=false;S.total=x[0];$('#custom').style.display='none';chk();}};w.appendChild(b);});
+  $('#custom').style.display='none';$('#custom').value='';chk();}
+function chk(){ $('#sizeok').disabled=S.custom&&!(+$('#custom').value>=2&&+$('#custom').value<=60); }
+$('#custom').oninput=chk;
+$('#sizeok').onclick=()=>{ if(S.custom)S.total=Math.round(+$('#custom').value); go('pmode'); };
+function newSer(mode,titles){ S.ser={id:'s'+Date.now(),cat:S.cat,sub:S.sub,total:S.total,mode:mode,parts:titles.map(t=>({title:t,done:false,script:null,style:'',dur:0,real:''})),prefs:null,answers:[]};persist(); }
+function buildPlan(mode,T){ const t=[];for(let i=0;i<S.total;i++)t.push(T[i]||'');newSer(mode,t);showPlan();go('plan'); }
+$('#pia').onclick=()=>{ newSer('ia',Array(S.total).fill(''));
+  /* les lots déjà écrits sont gardés : « Réessayer » reprend là où ça s'est arrêté */
+  run('plan',rep=>askTitlesFor(S.ser.parts.map((p,i)=>p.title?-1:i).filter(i=>i>=0),rep),()=>{showPlan();go('plan');}); };
+$('#pperso').onclick=()=>buildPlan('perso',[]);
+// plan
+const PEN='<svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',RFR='<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14-4L4 9M4 4v5h5M4 13a8 8 0 0 0 14 4l2-2M20 20v-5h-5"/></svg>';
+function usedTitles(){return S.ser.parts.map(p=>p.title).filter(Boolean);}
+let busy=false;
+async function newTitle(p,btn){ if(busy)return;busy=true;btn.classList.add('spin');
+  try{await askTitlesFor([S.ser.parts.indexOf(p)]);showPlan();}catch(e){toast(String(e.message||e));}finally{busy=false;btn.classList.remove('spin');} }
+function showPlan(){ const s=S.ser,d=s.parts.filter(p=>p.done).length,n=s.parts.findIndex(p=>!p.done);
+  $('#plt').textContent=s.sub;$('#pls').textContent=d+' partie'+(d>1?'s':'')+' enregistrée'+(d>1?'s':'')+' sur '+s.total;$('#pg').style.width=(d/s.total*100)+'%';
+  const w=$('#parts');w.innerHTML='';
+  s.parts.forEach((p,i)=>{const r=el('div','partrow');
+    const b=el('button','part'+(p.done?' done':i===n?' now':''),'<span class="no">'+(p.done?'<svg viewBox="0 0 24 24"><path d="M5 12l5 5 9-10"/></svg>':i+1)+'</span><span><b'+(p.title?'':' class="mut"')+'>'+(p.title?esc(p.title):'Écris le sujet de cette partie')+'</b><small>'+(p.done?'Enregistrée':i===n?'À faire maintenant':'À venir')+'</small></span>');
+    b.onclick=()=>{ if(p.done){S.pi=i;S.draft=p.script;S.tab='p';openScript(true);} else if(!p.title)openSheet(i); else startPart(i); };r.appendChild(b);
+    if(!p.done){const e=el('button','sq',PEN);e.setAttribute('aria-label','Écrire le sujet');e.onclick=()=>openSheet(i);r.appendChild(e);
+      const g=el('button','sq',RFR);g.setAttribute('aria-label','Autre sujet');g.onclick=()=>newTitle(p,g);r.appendChild(g);}
+    w.appendChild(r);});
+  const nx=$('#next'),todo=s.parts.some(p=>!p.done);$('#regenplan').style.display=todo?'':'none';
+  if(n<0){nx.textContent='Voir la série terminée';nx.onclick=()=>{endScreen();go('end');};}
+  else{nx.textContent=d?'Partie suivante : '+(n+1):'Commencer la partie 1';nx.onclick=()=>{ if(!s.parts[n].title)openSheet(n); else startPart(n); };} }
+$('#regenplan').onclick=async()=>{ if(busy)return;const s=S.ser,idx=s.parts.map((p,i)=>p.done?-1:i).filter(i=>i>=0);if(!idx.length)return;
+  const b=$('#regenplan'),old=b.textContent;busy=true;b.disabled=true;b.textContent='Génération en cours…';
+  try{await askTitlesFor(idx,(t,f)=>{b.textContent='Génération… '+Math.round(f*100)+' %';});showPlan();}
+  catch(e){toast(String(e.message||e));showPlan();}finally{busy=false;b.disabled=false;b.textContent=old;} };
+function hideSheet(){$('#sheet').classList.remove('on');}
+function openSheet(i){S.si=i;$('#sheett').textContent='Sujet de la partie '+(i+1);$('#sheeti').value=S.ser.parts[i].title;$('#sheet').classList.add('on');setTimeout(()=>$('#sheeti').focus(),50);}
+$('#sheetno').onclick=hideSheet;
+$('#sheetok').onclick=()=>{const v=$('#sheeti').value.trim();if(!v){$('#sheeti').focus();return;}S.ser.parts[S.si].title=v;persist();hideSheet();showPlan();};
+// parties
+function startPart(i){ S.pi=i;S.regen=0;S.editPrefs=false;S.prevH=[];
+  if(!S.ser.prefs&&!S.ser.answers.length){S.qi=0;askQ();go('ques');}
+  else run('hooks',()=>askHooks(),showHooks); }
+function askQ(){ const q=QUES[S.qi];$('#qt').textContent=q[0];$('#dots').innerHTML=QUES.map((_,i)=>'<i class="'+(i<=S.qi?'on':'')+'"></i>').join('');
+  const l=$('#qa');l.innerHTML='';q[1].forEach(a=>{const o=el('button','opt',esc(a)+CH);o.onclick=()=>{S.ser.answers[S.qi]=a;S.qi++;persist();if(S.qi<QUES.length){askQ();}else run('hooks',()=>askHooks(),showHooks);};l.appendChild(o);});}
+function ptitle(){return S.ser.parts[S.pi].title;}
+function prefText(){const p=S.ser.prefs;return p?p.style+' · '+fmtDur(p.dur)+' · '+REAL.find(r=>r[0]===p.real)[1]:'';}
+let HL=[];
+function showHooks(a){ HL=a;$('#hs').textContent='Partie '+(S.pi+1)+' : '+ptitle();const l=$('#hl');l.innerHTML='';
+  a.forEach(h=>{const b=el('button','go hook','<span></span><small></small>');b.firstChild.textContent=h[0];b.lastChild.textContent=h[1];
+    b.onclick=()=>{S.hook=h[0];
+      if(S.ser.prefs)run('script',()=>askScript(false),showScript);else{buildStyle();go('style');}};l.appendChild(b);});
+  const pc=$('#prefcard');pc.style.display=S.ser.prefs?'flex':'none';$('#preft').textContent=prefText();go('hooks'); }
+$('#againH').onclick=()=>{S.prevH=S.prevH.concat(HL.map(x=>x[0])).slice(-9);run('hooks',()=>askHooks(),showHooks);};
+$('#prefedit').onclick=()=>{S.editPrefs=true;buildStyle();go('style');};
+function buildStyle(){ const g=$('#stl');g.innerHTML='';const rec=REC_STYLE[S.cat];
+  STYLES.forEach((s,i)=>{const b=el('button','card stl','<span class="tag"></span>'+(i===rec?'<em class="rec">Recommandé</em>':'')+'<small></small>');b.firstChild.textContent=s[0];b.lastChild.textContent=s[1];
+    b.onclick=()=>{S.tmp={style:s[0]};buildDur();go('dur');};g.appendChild(b);});}
+function buildDur(){ const l=$('#dl');l.innerHTML='';const rec=REC_DUR[S.tmp.style]||60;$('#dcrow').style.display='none';$('#dok').style.display='none';S.tmp.dur=0;S.dunit='s';
+  [[30,'30 secondes'],[45,'45 secondes'],[60,'1 minute'],[120,'2 minutes'],['p','Personnaliser']].forEach(x=>{
+    const o=el('button','opt',x[1]+(x[0]===rec?'<em class="rec" style="margin-left:auto">Recommandé</em>':'')+(x[0]==='p'?CH:''));
+    o.onclick=()=>{ if(x[0]==='p'){$('#dcrow').style.display='block';$('#dok').style.display='block';S.dunit='s';setUnit();$('#dcustom').value='';dcheck();$('#dcustom').focus();return;}S.tmp.dur=x[0];buildReal();go('real');};l.appendChild(o);}); }
+/* durée personnalisée : le clavier ne donne que des chiffres, on choisit l'unité à côté */
+function setUnit(){ $$('#dunit button').forEach(b=>b.classList.toggle('on',b.dataset.u===S.dunit));$('#dcustom').placeholder=S.dunit==='m'?'Ex. 3':'Ex. 90'; }
+function dsec(){ const v=+$('#dcustom').value;return {v,sec:Math.round(S.dunit==='m'?v*60:v)}; }
+function dcheck(){ const d=dsec(),ok=d.v>0&&d.sec>=10&&d.sec<=600;$('#dok').disabled=!ok;
+  $('#dhint').textContent=d.v>0?(ok?'Durée choisie : '+fmtDur(d.sec):'Choisis entre 10 secondes et 10 minutes.'):'Entre 10 secondes et 10 minutes.'; }
+$$('#dunit button').forEach(b=>b.onclick=()=>{S.dunit=b.dataset.u;setUnit();dcheck();$('#dcustom').focus();});
+$('#dcustom').oninput=dcheck;
+$('#dok').onclick=()=>{const d=dsec();if(!(d.v>0&&d.sec>=10&&d.sec<=600)){dcheck();$('#dcustom').focus();return;}S.tmp.dur=d.sec;buildReal();go('real');};
+function buildReal(){ const hard=S.cat==='Action'||HARD_SUBS.includes(S.sub);
+  $('#realmsg').textContent=hard?'Ton univers contient des scènes difficiles à filmer seul (poursuite, chute, cascade). Dis-nous ce qui est possible pour toi : on adapte les scènes.':'Dis-nous ce que tu peux filmer : on adapte les scènes à ce qui est réaliste.';
+  const l=$('#rl');l.innerHTML='';REAL.forEach(r=>{const o=el('button','opt','<span>'+r[1]+'<small>'+r[2]+'</small></span>'+CH);
+    o.onclick=()=>{S.tmp.real=r[0];S.ser.prefs=S.tmp;persist();
+      if(S.editPrefs){S.editPrefs=false;$('#prefcard').style.display='flex';$('#preft').textContent=prefText();hist=hist.filter(x=>x!=='style'&&x!=='dur'&&x!=='real');go('hooks',true);}
+      else run('script',()=>askScript(false),showScript);};l.appendChild(o);});}
+// script : paroles / déroulement / publication
+function showScript(d){ S.draft=d;S.tab='p';openScript(false); }
+function openScript(fromPlan){ const p=S.ser.parts[S.pi];$('#sct').textContent='Partie '+(S.pi+1)+' : '+p.title;$('#scs').textContent=fromPlan?'Partie enregistrée':'Cette partie, prête à tourner';
+  $('#ana').style.display=fromPlan?'none':'';showTab(S.tab);go('script'); }
+function editing(){return $('#sbox').contentEditable==='true';}
+function endEdit(){const b=$('#sbox');b.contentEditable=false;$('#edit').textContent='Modifier';if(S.tab!=='h')S.draft[S.tab]=b.textContent;}
+function showTab(t){ if(editing())endEdit();S.tab=t;$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  const box=$('#sbox'),pub=$('#pub');
+  if(t==='h'){box.style.display='none';pub.style.display='';$('#edit').style.display='none';const h=S.draft.h;
+    pub.innerHTML='<div class="hg"><div class="tag">Description</div><p></p><button class="mini" data-c="d">Copier la description</button></div>'+
+      h.groups.map((g,i)=>'<div class="hg"><div class="tag">Groupe '+(i+1)+'</div><div class="row">'+g.map(x=>'<em>'+esc(x)+'</em>').join('')+'</div><button class="mini" data-g="'+i+'">Copier ces '+g.length+'</button></div>').join('')+
+      '<p class="hint" style="text-align:left">TikTok accepte 5 hashtags par vidéo : choisis un groupe.</p>';
+    pub.querySelector('p').textContent=h.desc;
+    pub.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>cp(h.desc,b,b.textContent));
+    pub.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>cp(h.groups[+b.dataset.g].join(' '),b,b.textContent));}
+  else{pub.style.display='none';box.style.display='';$('#edit').style.display='';box.textContent=S.draft[t];box.contentEditable=false;$('#edit').textContent='Modifier';} }
+function cp(t,btn,l){try{navigator.clipboard&&navigator.clipboard.writeText(t);}catch(e){}if(btn){btn.textContent='Copié';setTimeout(()=>btn.textContent=l,1500);}}
+$$('#tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.t));
+$('#copy').onclick=()=>{if(editing())endEdit();const h=S.draft.h;cp(S.tab==='h'?h.desc+'\n\n'+h.groups.map(g=>g.join(' ')).join('\n'):S.draft[S.tab],$('#copy'),'Copier');};
+$('#edit').onclick=()=>{const b=$('#sbox');if(editing())endEdit();else{b.contentEditable=true;$('#edit').textContent='Terminé';b.focus();}};
+$('#ana').onclick=()=>{if(editing())endEdit();run('ana',()=>askAnal(),showAnal);};
+function showAnal(r){ const li=a=>a.map(x=>'<li>'+esc(x)+'</li>').join('');
+  $('#at').textContent='Analyse de la partie '+(S.pi+1);
+  $('#ok').innerHTML=li(r.ok);$('#ko').innerHTML=li(r.ko);$('#re').innerHTML=li(r.re);$('#resec').style.display=r.re.length?'':'none';go('anal'); }
+$('#regen').onclick=()=>{S.regen++;run('script',()=>askScript(true),d=>{showScript(d);hist=hist.filter(x=>x!=='anal');});};
+function toAppHistory(p,pr){ try{const k='ff_history',l=JSON.parse(localStorage.getItem(k)||'[]'),sc=S.draft;
+  l.unshift({ts:Date.now(),idea:'Série « '+S.ser.sub+' » · Partie '+(S.pi+1)+' : '+p.title,sc:{paroles:sc.p,dtxt:sc.d,description:sc.h.desc,tags:[].concat.apply([],sc.h.groups)}});
+  if(l.length>50)l.length=50;localStorage.setItem(k,JSON.stringify(l));}catch(e){} }
+$('#save').onclick=()=>{const p=S.ser.parts[S.pi],pr=S.ser.prefs;p.done=true;p.script=S.draft;p.style=pr.style;p.dur=pr.dur;p.real=pr.real;persist();toAppHistory(p,pr);
+  hist=['home'];cur='plan';showPlan();go('plan',true);};
+function endScreen(){ $('#endt').textContent='Les '+S.ser.total+' parties de « '+S.ser.sub+' » sont enregistrées.'; }
+$('#seeplan').onclick=()=>{showPlan();go('plan');};
+$('#newser').onclick=()=>{hist=[];go('home',true);};
+$('#hbtn').onclick=()=>{const l=$('#ml');l.innerHTML='';const a=load_();
+  if(!a.length)l.innerHTML='<p class="empty">Aucune série pour l\'instant.</p>';
+  a.forEach(x=>{const d=x.parts.filter(p=>p.done).length,b=el('button','opt','<span>'+esc(x.sub)+'<small>'+esc(x.cat)+' · '+d+' / '+x.total+' parties</small></span>'+CH);
+    b.onclick=()=>{S.ser=x;S.cat=x.cat;S.sub=x.sub;S.total=x.total;showPlan();go('plan');};l.appendChild(b);});go('mine');};
+sync();
+</script>
+</body>
+</html>
