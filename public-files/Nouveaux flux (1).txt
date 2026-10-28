@@ -1,0 +1,240 @@
+Voici le script 100 % automatisé en Python. Il génère tout lui-même :
+
+1.  La voix off française via synthèse vocale (gTTS).
+2.  Les visuels 9:16 (format TikTok / Reel / Short) avec le code coloré, les
+    fenêtres macOS et les alertes.
+3.  La synchronisation parfaite : la durée de chaque slide s'adapte
+    automatiquement à la durée exacte de la voix.
+4.  L'export final du fichier vidéo video_js_erreurs.mp4.
+
+Étape 1 : Installer les 3 outils nécessaires
+
+Ouvre ton terminal (ou invite de commande) et lance :
+
+pip install moviepy gTTS pillow
+
+Étape 2 : Le code complet à copier dans un fichier generer_video.py (ou script.txt)
+
+Copie l'intégralité du bloc ci-dessous dans un fichier nommé generer_video.py :
+
+import os
+from gtts import gTTS
+from PIL import Image, ImageDraw, ImageFont
+
+# Gestion de compatibilité MoviePy v1 et v2
+try:
+    from moviepy.editor import ImageClip, AudioFileClip, concatenate_videoclips
+except ImportError:
+    from moviepy import ImageClip, AudioFileClip, concatenate_videoclips
+
+# --- Configuration Vidéo (Format 9:16 vertical) ---
+WIDTH, HEIGHT = 1080, 1920
+FPS = 24
+OUTPUT_VIDEO = "video_js_erreurs.mp4"
+
+# --- Données des scènes (Voix off + Visuels) ---
+SCENES = [
+    {
+        "id": "intro",
+        "audio_text": "Si tu fais encore cette erreur en JavaScript, arrête tout de suite !",
+        "badge": "ERREUR JS ⚠️",
+        "badge_color": "#ff3838",
+        "title": "ARRÊTE ÇA TOUT DE SUITE",
+        "code": [
+            "// 4 pièges JavaScript",
+            "// qui ruinent ton code...",
+            "",
+            "1. Le double égal (==)",
+            "2. Les références cachées",
+            "3. Le piège de var",
+            "4. L'asynchrone sans await"
+        ],
+        "footer": "Regarde jusqu'à la fin 👇"
+    },
+    {
+        "id": "piege1",
+        "audio_text": "Premier piège : utiliser le double égal au lieu du triple égal. Ça fait des conversions bizarres en douce.",
+        "badge": "PIÈGE #1",
+        "badge_color": "#ff9f1a",
+        "title": "Double égal == Danger",
+        "code": [
+            "// ❌ Coercition bizarre",
+            "0 == '0'       // true 🤔",
+            "[] == false    // true 🤯",
+            "",
+            "// ✅ Solution : toujours le strict",
+            "0 === '0'      // false ✅",
+            "[] === false   // false ✅"
+        ],
+        "footer": "Bannis le '==' de ton code !"
+    },
+    {
+        "id": "piege2",
+        "audio_text": "Deuxième piège : oublier que les tableaux et les objets sont passés par référence. Tu modifies un truc, ça change tout ailleurs sans prévenir.",
+        "badge": "PIÈGE #2",
+        "badge_color": "#ff4d4d",
+        "title": "Passage par Référence",
+        "code": [
+            "// ⚠️ Attention aux mutations :",
+            "const user1 = { nom: 'Alex' };",
+            "const user2 = user1;",
+            "",
+            "user2.nom = 'Bob';",
+            "",
+            "console.log(user1.nom);",
+            "// Affiche 'Bob' ! 💥 (Objet modifié partout)"
+        ],
+        "footer": "Utilise {...user1} pour cloner !"
+    },
+    {
+        "id": "piege3_4",
+        "audio_text": "Troisième piège : le scope des variables avec var. Utilise let ou const et évite les surprises. Et enfin, ignorer l'asynchrone avec async await, c'est le bug garanti.",
+        "badge": "PIÈGES #3 & #4",
+        "badge_color": "#18dcff",
+        "title": "Scope & Asynchrone",
+        "code": [
+            "// ❌ Ne touche plus à var :",
+            "for (var i = 0; i < 3; i++) {}",
+            "console.log(i); // 3 (fuite de variable !)",
+            "// ✅ Utilise let ou const !",
+            "",
+            "// ⏳ Oubli du await :",
+            "const res = fetch('/api'); // C'est une Promise !",
+            "const data = await fetch('/api'); // ✅"
+        ],
+        "footer": "let / const + async / await obligatoires !"
+    },
+    {
+        "id": "outro",
+        "audio_text": "Dis-moi en commentaire si tu tombes encore dans le panneau.",
+        "badge": "QUESTION",
+        "badge_color": "#7d5fff",
+        "title": "ALORS, TU SAVAIS ?",
+        "code": [
+            "// Bilan JavaScript :",
+            "1. Toujours === (strict)",
+            "2. Fais attention aux références",
+            "3. Oublie var, utilise let/const",
+            "4. Maîtrise async / await",
+            "",
+            "💬 Dis-moi en commentaire si tu",
+            "tombes encore dans le panneau !"
+        ],
+        "footer": "Abonne-toi pour plus d'astuces dev !"
+    }
+]
+
+def get_font(size):
+    """Charge une police système ou la police par défaut."""
+    font_names = [
+        "arial.ttf", "Arial.ttf", "DejaVuSans.ttf", "DejaVuSans-Bold.ttf",
+        "/System/Library/Fonts/Helvetica.ttc", "/Library/Fonts/Arial.ttf"
+    ]
+    for font in font_names:
+        try:
+            return ImageFont.truetype(font, size)
+        except Exception:
+            continue
+    return ImageFont.load_default()
+
+def create_image(scene_data, filename):
+    """Dessine une slide visuelle 1080x1920 avec rendu code & macOS."""
+    img = Image.new("RGB", (WIDTH, HEIGHT), color="#0d1117")
+    draw = ImageDraw.Draw(img)
+
+    font_badge = get_font(38)
+    font_title = get_font(52)
+    font_code = get_font(36)
+    font_footer = get_font(38)
+
+    # 1. Badge supérieur
+    badge_text = scene_data["badge"]
+    draw.rounded_rectangle([340, 200, 740, 280], radius=40, fill=scene_data["badge_color"])
+    draw.text((540, 240), badge_text, fill="#ffffff", font=font_badge, anchor="mm")
+
+    # 2. Titre principal
+    draw.text((540, 360), scene_data["title"], fill="#f0f6fc", font=font_title, anchor="mm")
+
+    # 3. Carte de Code (style macOS IDE)
+    card_box = [80, 480, 1000, 1500]
+    draw.rounded_rectangle(card_box, radius=24, fill="#161b22", outline="#30363d", width=3)
+
+    # Pastilles macOS (Rouge, Jaune, Vert)
+    draw.ellipse([120, 520, 145, 545], fill="#ff5f56")
+    draw.ellipse([160, 520, 185, 545], fill="#ffbd2e")
+    draw.ellipse([200, 520, 225, 545], fill="#27c93f")
+    draw.line([80, 570, 1000, 570], fill="#30363d", width=2)
+
+    # Lignes de code avec colorisation basique
+    start_y = 620
+    for line in scene_data["code"]:
+        line_color = "#c9d1d9"
+        if line.startswith("//"):
+            line_color = "#8b949e"
+        elif "==" in line or "===" in line:
+            line_color = "#79c0ff"
+        elif "const" in line or "let" in line or "var" in line or "await" in line:
+            line_color = "#ff7b72"
+        elif "true" in line or "false" in line:
+            line_color = "#ffa657"
+
+        draw.text((130, start_y), line, fill=line_color, font=font_code)
+        start_y += 75
+
+    # 4. Footer d'engagement
+    draw.text((540, 1650), scene_data["footer"], fill="#58a6ff", font=font_footer, anchor="mm")
+
+    img.save(filename)
+
+def attach_duration_and_audio(clip, audio):
+    """Garantit la compatibilité des méthodes entre MoviePy v1 et v2."""
+    if hasattr(clip, "with_duration"):
+        return clip.with_duration(audio.duration).with_audio(audio)
+    return clip.set_duration(audio.duration).set_audio(audio)
+
+def main():
+    print("🚀 Démarrage de la génération de la vidéo...")
+    os.makedirs("temp_assets", exist_ok=True)
+    video_clips = []
+
+    for index, scene in enumerate(SCENES):
+        print(f"🎬 Traitement Scène {index + 1}/{len(SCENES)} : {scene['badge']}...")
+        
+        # 1. Génération Audio TTS
+        audio_path = f"temp_assets/audio_{index}.mp3"
+        tts = gTTS(text=scene["audio_text"], lang="fr", slow=False)
+        tts.save(audio_path)
+        audio_clip = AudioFileClip(audio_path)
+
+        # 2. Génération de l'image
+        image_path = f"temp_assets/slide_{index}.png"
+        create_image(scene, image_path)
+
+        # 3. Création du clip synchronisé à la seconde exacte
+        img_clip = ImageClip(image_path)
+        synced_clip = attach_duration_and_audio(img_clip, audio_clip)
+        video_clips.append(synced_clip)
+
+    print("🎞️ Assemblage et rendu final de la vidéo...")
+    final_video = concatenate_videoclips(video_clips, method="compose")
+    final_video.write_videofile(
+        OUTPUT_VIDEO,
+        fps=FPS,
+        codec="libx264",
+        audio_codec="aac"
+    )
+
+    print(f"✅ TERMINÉ ! Ta vidéo est prête : {OUTPUT_VIDEO}")
+
+if __name__ == "__main__":
+    main()
+
+Étape 3 : Lancer la création
+
+Dans ton terminal, lance simplement :
+
+python generer_video.py
+
+Le script va créer le dossier temporaire, enregistrer les voix, peindre les
+images et te sortir directement le fichier final video_js_erreurs.mp4 prêt à
+poster sur YouTube Shorts, TikTok ou Instagram Reels !
